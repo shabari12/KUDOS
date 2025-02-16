@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
     select: false,
   },
   spaces: {
-    type: Array,
+    type: {type: mongoose.Schema.Types.ObjectId, ref: "Space"},
     default: [],
   },
 });
