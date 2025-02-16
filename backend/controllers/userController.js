@@ -14,7 +14,7 @@ const hashOtp = (email, otp) => {
     .digest("hex");
 };
 
-const otpStore = new Map(); // Temporary storage for OTP hashes
+const otpStore = new Map();
 
 const registerUser = async (req, res) => {
   const errors = validationResult(req);
@@ -76,4 +76,27 @@ const verifyUser = async (req, res) => {
   });
 };
 
-module.exports = { registerUser, verifyUser };
+const loginUser = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  const { email, password } = req.body;
+  const user = await userModel.findOne({ email }).select("+password");
+  if (!user) {
+    return res.status(400).json({ msg: "Invalid credentials" });
+  }
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    return res.status(400).json({ msg: "Invalid credentials" });
+  }
+  const token = user.generateAuthToken();
+  res.cookie("token", token);
+  res.status(200).json({ user, token });
+};
+
+const getProfile = async (req, res) => {
+  res.status(200).json(req.user);
+};
+
+module.exports = { registerUser, verifyUser, loginUser, getProfile };
