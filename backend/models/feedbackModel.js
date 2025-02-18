@@ -1,19 +1,18 @@
-const model = require("mongoose").model;
+const mongoose = require("mongoose");
 
 const feedbackSchema = new mongoose.Schema({
   email: {
-    type: email,
+    type: String, // Fix the type from 'email' to 'String'
     required: true,
   },
   name: {
     type: String,
     required: true,
-    },
-    feedbackuserLogo: {
-        type: String,
-        required: true,
-        
-    },
+  },
+  feedbackuserLogo: {
+    type: String,
+    required: true,
+  },
   feedback: {
     type: String,
     required: true,
@@ -31,3 +30,7 @@ const feedbackSchema = new mongoose.Schema({
     default: Date.now(),
   },
 });
+
+const Feedback = mongoose.model("Feedback", feedbackSchema);
+
+module.exports = Feedback;

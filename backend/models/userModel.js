@@ -19,10 +19,12 @@ const userSchema = new mongoose.Schema({
     minlength: 6,
     select: false,
   },
-  spaces: {
-    type: {type: mongoose.Schema.Types.ObjectId, ref: "Space"},
-    default: [],
-  },
+  spaces: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Space",
+    },
+  ],
 });
 
 userSchema.methods.generateAuthToken = function () {
@@ -37,7 +39,7 @@ userSchema.methods.comparePasswords = async function (password) {
 };
 
 userSchema.statics.hashPassword = async function (password) {
-  const saltRounds = parseInt(process.env.SALT, 10); 
+  const saltRounds = parseInt(process.env.SALT, 10);
   return await bcrypt.hash(password, saltRounds);
 };
 

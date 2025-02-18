@@ -1,4 +1,4 @@
-const { model } = require("mongoose");
+const mongoose = require("mongoose");
 
 const spaceSchema = new mongoose.Schema({
   spaceName: {
@@ -6,7 +6,7 @@ const spaceSchema = new mongoose.Schema({
     required: true,
   },
   spaceLogo: {
-    type: String,
+    type: Buffer,
     required: true,
     default: "",
   },
