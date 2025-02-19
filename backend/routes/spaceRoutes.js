@@ -44,5 +44,22 @@ router.post(
   ],
   spaceController.updateSpace
 );
-router.get("/get-space", userMiddleware.authUser, spaceController.getSpace);
+router.get(
+  "/get-space",
+  userMiddleware.authUser,
+  [body("spaceName").notEmpty().withMessage("Space Name is required")],
+  spaceController.getSpace
+);
+router.get(
+  "/get-all-spaces",
+  userMiddleware.authUser,
+  spaceController.getAllSpaces
+);
+router.post(
+  "/delete-space",
+  userMiddleware.authUser,
+  [body("spaceName").notEmpty().withMessage("Space Name is required")],
+  spaceController.deleteSpace
+);
+
 module.exports = router;

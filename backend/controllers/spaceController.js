@@ -77,5 +77,45 @@ const updateSpace = async (req, res) => {
     return res.status(500).json({ msg: "Failed to update space" });
   }
 };
-const getSpace = async (req, res) => {};
-module.exports = { createSpace, updateSpace, getSpace };
+const getSpace = async (req, res) => {
+  const spaceName = req.body.spaceName;
+  try {
+    const space = await spaceModel.findOne({
+      spaceName: spaceName,
+      createdBy: req.user._id,
+    });
+    if (!space) {
+      return res.status(404).json({ msg: "Space not found" });
+    }
+    return res.status(200).json({ space });
+  } catch (error) {
+    console.error("Error getting space:", error);
+    return res.status(500).json({ msg: "Failed to get space" });
+  }
+};
+const getAllSpaces = async (req, res) => {
+  try {
+    const spaces = await spaceModel.find({ createdBy: req.user._id });
+    return res.status(200).json({ spaces });
+  } catch (error) {
+    console.error("Error getting all spaces:", error);
+    return res.status(500).json({ msg: "Failed to get all spaces" });
+  }
+};
+
+const deleteSpace = async (req, res) => {
+  const spaceName = req.body.spaceName;
+  try {
+    const space = await spaceModel.findOneAndDelete({
+      spaceName: spaceName,
+      createdBy: req.user._id,
+    });
+    if (!space) {
+      return res.status(404).json({ msg: "Space not found" });
+    }
+  } catch (error) {
+    console.error("Error deleting space:", error);
+    return res.status(500).json({ msg: "Failed to delete space" });
+  }
+};
+module.exports = { createSpace, updateSpace, getSpace, deleteSpace,getAllSpaces };
