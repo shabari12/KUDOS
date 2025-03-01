@@ -35,6 +35,30 @@ const submitFeedback = async (req, res) => {
   }
 };
 
+const getFeedback = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { spaceId } = req.body;
+
+  try {
+    const space = await spaceModel.findById(spaceId);
+    if (!space) {
+      return res.status(404).json({ msg: "Space not found" });
+    }
+
+    const feedbacks = await feedbackModel.find({ space: space._id });
+
+    return res.status(200).json({ feedbacks });
+  } catch (error) {
+    console.error("Error getting feedback:", error);
+    return res.status(500).json({ msg: "Failed to get feedback" });
+  }
+};
+
 module.exports = {
   submitFeedback,
+  getFeedback,
 };

@@ -19,5 +19,11 @@ router.post(
   ],
   feedbackController.submitFeedback
 );
+router.get(
+  "/get-feedback",
+  [body("spaceId").notEmpty().withMessage("Space ID is required")],
+  feedbackController.getFeedback
+);
+
 
 module.exports = router;
