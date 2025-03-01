@@ -10,7 +10,7 @@ const feedbackSchema = new mongoose.Schema({
     required: true,
   },
   feedbackuserLogo: {
-    type: String,
+    type: Buffer,
     required: true,
   },
   feedback: {
