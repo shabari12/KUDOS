@@ -71,7 +71,7 @@ const updateSpace = async (req, res) => {
       space.spaceLogo = req.file.buffer;
     }
     await space.save();
-    return res.status(200).json({ msg: "Space updated successfully" });
+    return res.status(200).json({ space});
   } catch (error) {
     console.error("Error updating space:", error);
     return res.status(500).json({ msg: "Failed to update space" });

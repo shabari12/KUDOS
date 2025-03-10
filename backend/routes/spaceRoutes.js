@@ -16,7 +16,9 @@ router.post(
     body("headerTitle").notEmpty().withMessage("Header Title is required"),
     body("customMessage").notEmpty().withMessage("Custom Message is required"),
     body("Questions").notEmpty().withMessage("Questions is required"),
-    body("CollectStarRating").notEmpty().withMessage("Collect Star Rating is required"),
+    body("CollectStarRating")
+      .notEmpty()
+      .withMessage("Collect Star Rating is required"),
   ],
   spaceController.createSpace
 );
@@ -30,7 +32,9 @@ router.post(
     body("headerTitle").notEmpty().withMessage("Header Title is required"),
     body("customMessage").notEmpty().withMessage("Custom Message is required"),
     body("Questions").notEmpty().withMessage("Questions is required"),
-    body("CollectStarRating").notEmpty().withMessage("Collect Star Rating is required"),
+    body("CollectStarRating")
+      .notEmpty()
+      .withMessage("Collect Star Rating is required"),
   ],
   spaceController.updateSpace
 );
