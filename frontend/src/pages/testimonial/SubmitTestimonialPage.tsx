@@ -6,7 +6,6 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import Input from '../../components/ui/Input';
 import TextArea from '../../components/ui/TextArea';
 import Button from '../../components/ui/Button';
-import { useSpaces } from '../../context/SpaceContext';
 
 interface TestimonialFormData {
   name: string;
@@ -17,11 +16,11 @@ interface TestimonialFormData {
 const SubmitTestimonialPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { getSpace, addTestimonial } = useSpaces();
+
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<TestimonialFormData>();
   
-  const space = getSpace(id || '');
+
   
   if (!space) {
     return (
@@ -42,11 +41,7 @@ const SubmitTestimonialPage: React.FC = () => {
   }
 
   const onSubmit = (data: TestimonialFormData) => {
-    addTestimonial(space.id, {
-      name: data.name,
-      feedback: data.feedback,
-      mediaUrl: data.mediaUrl
-    });
+    
     setIsSubmitted(true);
   };
 

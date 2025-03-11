@@ -71,32 +71,50 @@ const updateSpace = async (req, res) => {
       space.spaceLogo = req.file.buffer;
     }
     await space.save();
-    return res.status(200).json({ space});
+    return res.status(200).json({ space });
   } catch (error) {
     console.error("Error updating space:", error);
     return res.status(500).json({ msg: "Failed to update space" });
   }
 };
 const getSpace = async (req, res) => {
-  const spaceName = req.body.spaceName;
+  const spaceId = req.query.spaceId;
   try {
     const space = await spaceModel.findOne({
-      spaceName: spaceName,
+      _id: spaceId,
       createdBy: req.user._id,
     });
+
     if (!space) {
       return res.status(404).json({ msg: "Space not found" });
     }
-    return res.status(200).json({ space });
+
+    const formattedSpace = {
+      ...space._doc,
+      spaceLogo: space.spaceLogo
+        ? `data:image/png;base64,${space.spaceLogo.toString("base64")}`
+        : null,
+    };
+
+    res.json({ space: formattedSpace }); // Corrected response key
   } catch (error) {
     console.error("Error getting space:", error);
     return res.status(500).json({ msg: "Failed to get space" });
   }
 };
+
 const getAllSpaces = async (req, res) => {
   try {
     const spaces = await spaceModel.find({ createdBy: req.user._id });
-    return res.status(200).json({ spaces });
+
+    const formattedSpaces = spaces.map((space) => ({
+      ...space._doc,
+      spaceLogo: space.spaceLogo
+        ? `data:image/png;base64,${space.spaceLogo.toString("base64")}`
+        : null,
+    }));
+
+    res.json({ spaces: formattedSpaces });
   } catch (error) {
     console.error("Error getting all spaces:", error);
     return res.status(500).json({ msg: "Failed to get all spaces" });
@@ -104,18 +122,26 @@ const getAllSpaces = async (req, res) => {
 };
 
 const deleteSpace = async (req, res) => {
-  const spaceName = req.body.spaceName;
+  const spaceId = req.body.spaceId;
+
   try {
     const space = await spaceModel.findOneAndDelete({
-      spaceName: spaceName,
+      _id: spaceId,
       createdBy: req.user._id,
     });
     if (!space) {
       return res.status(404).json({ msg: "Space not found" });
     }
+    return res.status(200).json({ msg: "Space deleted successfully" });
   } catch (error) {
     console.error("Error deleting space:", error);
     return res.status(500).json({ msg: "Failed to delete space" });
   }
 };
-module.exports = { createSpace, updateSpace, getSpace, deleteSpace,getAllSpaces };
+module.exports = {
+  createSpace,
+  updateSpace,
+  getSpace,
+  deleteSpace,
+  getAllSpaces,
+};

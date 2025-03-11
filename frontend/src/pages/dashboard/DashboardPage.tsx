@@ -1,33 +1,60 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, Settings, ExternalLink, Trash2 } from 'lucide-react';
+import { Plus, ExternalLink, Trash2 } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../../components/ui/Card';
 import { UserDataContext } from '../../context/UserContext';
-import { useSpaces, Space } from '../../context/SpaceContext';
+import axios from 'axios';
 
 const DashboardPage: React.FC = () => {
   const { user } = useContext(UserDataContext);
-  const { spaces, deleteSpace } = useSpaces();
-  const [showCreateModal, setShowCreateModal] = React.useState(false);
-  const [newSpaceName, setNewSpaceName] = React.useState('');
-  const [newSpaceDescription, setNewSpaceDescription] = React.useState('');
-  console.log('DashboardPage user:', user);
-  const handleDeleteSpace = (id: string, e: React.MouseEvent) => {
+  const [spaces, setSpaces] = useState<any[]>([]);
+
+  useEffect(() => {
+    const loadSpaces = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/spaces/get-all-spaces`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        
+        if (response.data && Array.isArray(response.data.spaces)) {
+          setSpaces(response.data.spaces);
+        } else {
+          setSpaces([]);
+        }
+      } catch (error) {
+        console.error('Error fetching spaces:', error);
+        setSpaces([]);
+      }
+    };
+
+    if (user) {
+      loadSpaces();
+    }
+  }, [user]);
+
+  const handleDeleteSpace = async (id: string, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (window.confirm('Are you sure you want to delete this space? This action cannot be undone.')) {
-      deleteSpace(id);
+      try {
+        const token = localStorage.getItem('token');
+        await axios.post(`${import.meta.env.VITE_BASE_URL}/spaces/delete-space`, 
+          { spaceId: id }, 
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setSpaces(spaces.filter((space) => space._id !== id));
+        console.log("space deleted successfully")
+      } catch (error) {
+        console.error('Error deleting space:', error);
+      }
     }
   };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    }).format(date);
+    return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(date);
   };
 
   return (
@@ -40,8 +67,7 @@ const DashboardPage: React.FC = () => {
         <div className="mt-4 md:mt-0">
           <Link to="/dashboard/create-space">
             <Button className="flex items-center">
-              <Plus className="h-5 w-5 mr-2" />
-              Create New Space
+              <Plus className="h-5 w-5 mr-2" /> Create New Space
             </Button>
           </Link>
         </div>
@@ -65,24 +91,31 @@ const DashboardPage: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {spaces.map((space) => (
-            <Link key={space.id} to={`/dashboard/space/${space.id}`}>
+            <Link key={space._id} to={`/dashboard/space/${space._id}`}>
               <Card className="h-full hover:shadow-md transition-shadow duration-200">
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <CardTitle className="text-xl">{space.name}</CardTitle>
-                    <button 
-                      onClick={(e) => handleDeleteSpace(space.id, e)}
-                      className="text-gray-400 hover:text-red-500 transition-colors"
-                    >
-                      <Trash2 className="h-5 w-5" />
-                    </button>
-                  </div>
-                  <CardDescription>{space.description}</CardDescription>
-                </CardHeader>
+              <CardHeader>
+  <div className="flex justify-between items-start">
+    <div className="flex items-center">
+      {space.spaceLogo && (
+        <img 
+          src={space.spaceLogo} 
+          alt="Space Logo" 
+          className="w-10 h-10 rounded-full mr-3 object-cover"
+        />
+      )}
+      <CardTitle className="text-xl">{space.spaceName}</CardTitle>
+    </div>
+    <button onClick={(e) => handleDeleteSpace(space._id, e)} className="text-gray-400 hover:text-red-500 transition-colors">
+      <Trash2 className="h-5 w-5" />
+    </button>
+  </div>
+  <CardDescription>{space.customMessage}</CardDescription>
+</CardHeader>
+
                 <CardContent>
                   <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
                     <span>Created: {formatDate(space.createdAt)}</span>
-                    <span>{space.testimonials.length} testimonials</span>
+                    <span>{space.Questions?.length || 0} questions</span>
                   </div>
                   <div className="flex items-center text-sm text-blue-600">
                     <ExternalLink className="h-4 w-4 mr-1" />

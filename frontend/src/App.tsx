@@ -10,7 +10,7 @@ import CreateSpacePage from './pages/dashboard/CreateSpacePage';
 import SpaceDetailPage from './pages/dashboard/SpaceDetailPage';
 import SubmitTestimonialPage from './pages/testimonial/SubmitTestimonialPage';
 import UserContext, { UserDataContext } from './context/UserContext';
-import { SpaceProvider } from './context/SpaceContext';
+
 
 // Protected route component
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -82,9 +82,9 @@ const AppContent: React.FC = () => {
 function App() {
   return (
     <UserContext>
-      <SpaceProvider>
+      
         <AppContent />
-      </SpaceProvider>
+      
     </UserContext>
   );
 }

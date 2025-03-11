@@ -42,7 +42,7 @@ router.post(
 router.get(
   "/get-space",
   userMiddleware.authUser,
-  query("spaceName").notEmpty().withMessage("Space Name is required"), // Use query instead of body for GET request
+  // Use query instead of body for GET request
   spaceController.getSpace
 );
 
@@ -55,7 +55,7 @@ router.get(
 router.post(
   "/delete-space",
   userMiddleware.authUser,
-  [body("spaceName").notEmpty().withMessage("Space Name is required")],
+
   spaceController.deleteSpace
 );
 
