@@ -1,27 +1,58 @@
-import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { MessageSquare, Upload, Check } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../../components/ui/Card';
+import { MessageSquare, Upload, Check, Star } from 'lucide-react';
+import { Card, CardContent } from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
 import TextArea from '../../components/ui/TextArea';
 import Button from '../../components/ui/Button';
+import axios from 'axios';
 
 interface TestimonialFormData {
   name: string;
+  email: string;
   feedback: string;
   mediaUrl?: string;
+  rating?: number;
+  photo?: FileList;
+  permission: boolean;
 }
 
 const SubmitTestimonialPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-
+  const [space, setSpace] = useState<any>({
+    testimonials: [],
+    Questions: [],
+  });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [rating, setRating] = useState(0);
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<TestimonialFormData>();
-  
 
-  
+  useEffect(() => {
+    const loadSpace = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/spaces/get-space?spaceId=${id}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setSpace(response.data.space);
+      } catch (err: any) {
+        console.error('Error fetching space:', err);
+      }
+    };
+
+    loadSpace();
+  }, [id]);
+
+  const onSubmit = (data: TestimonialFormData) => {
+    if (space.CollectStarRating) {
+      data.rating = rating;
+    }
+    console.log('Testimonial Data:', data);
+    setIsSubmitted(true);
+  };
+
   if (!space) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -39,11 +70,6 @@ const SubmitTestimonialPage: React.FC = () => {
       </div>
     );
   }
-
-  const onSubmit = (data: TestimonialFormData) => {
-    
-    setIsSubmitted(true);
-  };
 
   if (isSubmitted) {
     return (
@@ -77,13 +103,16 @@ const SubmitTestimonialPage: React.FC = () => {
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="text-center">
-          <MessageSquare className="h-12 w-12 text-blue-600 mx-auto" />
+          {space.spaceLogo && (
+            <img
+              src={space.spaceLogo}
+              alt="Space Logo"
+              className="w-24 h-24 object-cover rounded-full mx-auto mb-4 border-2 border-gray-300"
+            />
+          )}
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Share your feedback
+            Write text testimonial to {space.name}
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            We'd love to hear about your experience with {space.name}
-          </p>
         </div>
       </div>
 
@@ -91,60 +120,136 @@ const SubmitTestimonialPage: React.FC = () => {
         <Card>
           <CardContent className="pt-6">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              {/* Questions */}
+              <div>
+                <h3 className="text-lg font-medium text-gray-900">Questions</h3>
+                <ul className="mt-2 space-y-4">
+                  {space.Questions.map((question: string, index: number) => (
+                    <li key={index}>
+                      <label className="block text-sm font-medium text-gray-700">
+                        {question}
+                      </label>
+                      <TextArea
+                        rows={3}
+                        {...register(`feedback${index}`, {
+                          required: 'This field is required',
+                        })}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Star Rating */}
+              {space.CollectStarRating && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Rate your experience
+                  </label>
+                  <div className="flex space-x-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setRating(star)}
+                        className={`h-6 w-6 ${
+                          star <= rating ? 'text-yellow-400' : 'text-gray-300'
+                        }`}
+                      >
+                        <Star className="h-6 w-6" />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* File Upload */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Attach Image(s)
+                </label>
+                <input
+                  type="file"
+                  {...register('mediaUrl')}
+                  className="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 p-2"
+                />
+              </div>
+
+              {/* Name */}
               <div>
                 <Input
-                  label="Your Name"
+                  label="Your Name *"
                   autoComplete="name"
                   error={errors.name?.message}
-                  {...register('name', { 
+                  {...register('name', {
                     required: 'Name is required',
                     minLength: {
                       value: 2,
-                      message: 'Name must be at least 2 characters'
-                    }
+                      message: 'Name must be at least 2 characters',
+                    },
                   })}
                 />
               </div>
 
-              <div>
-                <TextArea
-                  label="Your Feedback"
-                  rows={5}
-                  error={errors.feedback?.message}
-                  {...register('feedback', { 
-                    required: 'Feedback is required',
-                    minLength: {
-                      value: 10,
-                      message: 'Feedback must be at least 10 characters'
-                    }
-                  })}
-                />
-              </div>
-
+              {/* Email */}
               <div>
                 <Input
-                  label="Image URL (optional)"
-                  placeholder="https://example.com/your-image.jpg"
-                  error={errors.mediaUrl?.message}
-                  {...register('mediaUrl', { 
+                  label="Your Email *"
+                  type="email"
+                  autoComplete="email"
+                  error={errors.email?.message}
+                  {...register('email', {
+                    required: 'Email is required',
                     pattern: {
-                      value: /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
-                      message: 'Please enter a valid URL'
-                    }
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: 'Invalid email address',
+                    },
                   })}
                 />
-                <p className="mt-1 text-xs text-gray-500">
-                  You can add a link to an image that represents your experience.
-                </p>
               </div>
 
+              {/* Photo Upload */}
               <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Upload Your Photo
+                </label>
+                <input
+                  type="file"
+                  {...register('photo')}
+                  className="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 p-2"
+                />
+              </div>
+
+              {/* Permission Checkbox */}
+              <div>
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    {...register('permission')}
+                    className="form-checkbox h-4 w-4 text-blue-600"
+                  />
+                  <span className="ml-2 text-sm text-gray-700">
+                    I give permission to use this testimonial across social channels and other marketing efforts
+                  </span>
+                </label>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex space-x-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => navigate('/')}
+                >
+                  Cancel
+                </Button>
                 <Button
                   type="submit"
                   className="w-full"
                   isLoading={isSubmitting}
                 >
-                  Submit Testimonial
+                  Send
                 </Button>
               </div>
             </form>

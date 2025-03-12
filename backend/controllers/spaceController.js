@@ -19,59 +19,74 @@ const createSpace = async (req, res) => {
   } = req.body;
 
   try {
+    const parsedQuestions = Array.isArray(Questions) ? Questions : JSON.parse(Questions);
+
     const space = new spaceModel({
       spaceName,
       spaceLogo: req.file.buffer,
       headerTitle,
       customMessage,
-      Questions,
+      Questions: parsedQuestions, // Ensure it's an array
       createdBy: req.user._id,
       CollectStarRating,
     });
+
     await space.save();
 
-    // Update the user document to include the new space's ID
+    // Update user document to include space ID
     await userModel.findByIdAndUpdate(req.user._id, {
       $push: { spaces: space._id },
     });
 
-    return res.status(201).json({ msg: "Space created successfully" });
+    return res.status(201).json({ msg: "Space created successfully", space });
   } catch (error) {
     console.error("Error creating space:", error);
     return res.status(500).json({ msg: "Failed to create space" });
   }
 };
 
+
 const updateSpace = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
+
   const {
+    spaceId,
     spaceName,
     headerTitle,
     customMessage,
     Questions,
     CollectStarRating,
   } = req.body;
+
   try {
-    const space = await spaceModel.findOne({
-      spaceName: req.body.spaceName,
-      createdBy: req.user._id,
-    });
+    const parsedQuestions = Array.isArray(Questions) ? Questions : JSON.parse(Questions);
+
+    const updateData = {
+      spaceName,
+      headerTitle,
+      customMessage,
+      Questions: parsedQuestions, // Ensure it's an array
+      CollectStarRating,
+    };
+
+    if (req.file) {
+      updateData.spaceLogo = req.file.buffer;
+    }
+
+    const space = await spaceModel.findByIdAndUpdate(
+      spaceId,
+      updateData,
+      { new: true }
+    );
+
     if (!space) {
       return res.status(404).json({ msg: "Space not found" });
     }
-    space.spaceName = spaceName;
-    space.headerTitle = headerTitle;
-    space.customMessage = customMessage;
-    space.Questions = Questions;
-    space.CollectStarRating = CollectStarRating;
-    if (req.file) {
-      space.spaceLogo = req.file.buffer;
-    }
-    await space.save();
-    return res.status(200).json({ space });
+
+    return res.status(200).json({ msg: "Space updated successfully", space });
   } catch (error) {
     console.error("Error updating space:", error);
     return res.status(500).json({ msg: "Failed to update space" });
@@ -79,6 +94,7 @@ const updateSpace = async (req, res) => {
 };
 const getSpace = async (req, res) => {
   const spaceId = req.query.spaceId;
+  
   try {
     const space = await spaceModel.findOne({
       _id: spaceId,
@@ -94,14 +110,16 @@ const getSpace = async (req, res) => {
       spaceLogo: space.spaceLogo
         ? `data:image/png;base64,${space.spaceLogo.toString("base64")}`
         : null,
+      Questions: Array.isArray(space.Questions) ? space.Questions : [], // Ensure it's an array
     };
 
-    res.json({ space: formattedSpace }); // Corrected response key
+    return res.status(200).json({ space: formattedSpace });
   } catch (error) {
     console.error("Error getting space:", error);
     return res.status(500).json({ msg: "Failed to get space" });
   }
 };
+
 
 const getAllSpaces = async (req, res) => {
   try {
