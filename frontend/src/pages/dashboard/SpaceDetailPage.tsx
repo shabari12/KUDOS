@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Share2, Code, Trash2, ExternalLink, Copy, Edit, Edit3, MessageSquare } from 'lucide-react';
+import { ArrowLeft, Share2, Star, ExternalLink, Copy, Edit } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import axios from 'axios';
+import Swiper from 'swiper';
+import 'swiper/swiper-bundle.css';
 
 const SpaceDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  
+
   const [space, setSpace] = useState<any>({
     testimonials: [],
     Questions: [],
@@ -27,18 +29,48 @@ const SpaceDetailPage: React.FC = () => {
           `${import.meta.env.VITE_BASE_URL}/spaces/get-space?spaceId=${id}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        const spaceData = response.data.space
-        spaceData.shareLink = `${window.location.origin}/submit/${id}`
-        setSpace(response.data.space);
-        setEditedSpace(response.data.space);
+        const spaceData = response.data.space;
+        spaceData.shareLink = `${window.location.origin}/submit/${id}`;
+        setSpace(spaceData);
+        setEditedSpace(spaceData);
+
+        // Fetch testimonials
+        const testimonialResponse = await axios.post(
+          `${import.meta.env.VITE_BASE_URL}/feedback/get-feedback`, { spaceId: id }
+        );
+        if (testimonialResponse.status === 200 || testimonialResponse.status === 201) {
+          setSpace((prevSpace: any) => ({
+            ...prevSpace,
+            testimonials: testimonialResponse.data.feedbacks,
+          }));
+        }
       } catch (err: any) {
-        console.error('Error fetching space:', err);
+        console.error('Error fetching space or testimonials:', err);
         setError("Failed to load space details. Please try again.");
       }
     };
 
     loadSpace();
   }, [id]);
+
+  // Initialize Swiper carousel for testimonials
+  useEffect(() => {
+    if (activeTab === 'embed' && space.testimonials.length > 0) {
+      new Swiper('.testimonial-carousel', {
+        slidesPerView: 3, // Show 3 cards per slide
+        spaceBetween: 16, // Space between cards
+        loop: true,
+        autoplay: {
+          delay: 3000, // 3 seconds
+          disableOnInteraction: false,
+        },
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+        },
+      });
+    }
+  }, [activeTab, space.testimonials]);
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(space.shareLink);
@@ -47,8 +79,116 @@ const SpaceDetailPage: React.FC = () => {
   };
 
   const handleCopyEmbed = () => {
-    const embedCode = `<div id="testimonial-widget" data-space-id="${space.id}"></div>
-<script src="${window.location.origin}/testimonial-widget.js"></script>`;
+    const embedCode = `
+      <!-- Swiper CSS -->
+      <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    
+      <!-- Swiper Container -->
+      <div class="mt-6">
+        <h3 class="text-lg font-semibold mb-4">Preview</h3>
+        <div class="p-6 bg-gray-100 rounded-lg">
+          <div class="testimonial-carousel swiper-container overflow-hidden">
+            <div class="swiper-wrapper">
+              <!-- Testimonial Slides will be dynamically inserted here -->
+            </div>
+            <!-- Pagination Dots -->
+            <div class="swiper-pagination"></div>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Swiper JS -->
+      <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    
+      <!-- Testimonial Widget Script -->
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          // Fetch testimonials for the given space ID
+          const spaceId = "${id}";
+          fetch(\`http://localhost:4000/feedback/get-feedback\`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ spaceId: spaceId }),
+          })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json();
+            })
+            .then(data => {
+              const swiperWrapper = document.querySelector('.testimonial-carousel .swiper-wrapper');
+              if (data.feedbacks && Array.isArray(data.feedbacks)) {
+                swiperWrapper.innerHTML = data.feedbacks.map(testimonial => \`
+                  <div class="swiper-slide">
+                    <div class="p-6 bg-white rounded-lg shadow-sm border border-gray-100">
+                      <!-- User Info and Image -->
+                      <div class="flex items-center space-x-4">
+                        \${testimonial.feedbackuserLogo ? \`
+                          <img
+                            src="\${testimonial.feedbackuserLogo}"
+                            alt="User"
+                            class="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
+                          />
+                        \` : ''}
+                        <div>
+                          <p class="text-lg font-semibold text-gray-900">\${testimonial.name}</p>
+                          <p class="text-sm text-gray-500">\${testimonial.email}</p>
+                        </div>
+                      </div>
+    
+                      <!-- Star Rating -->
+                      \${testimonial.rating ? \`
+                        <div class="flex items-center mt-4">
+                          \${[...Array(5)].map((_, index) => \`
+                            <span class="\${index < testimonial.rating ? 'text-yellow-400' : 'text-gray-300'}">
+                              ★
+                            </span>
+                          \`).join('')}
+                        </div>
+                      \` : ''}
+    
+                      <!-- Feedback -->
+                      <p class="mt-4 text-gray-700 italic">"\${testimonial.feedback}"</p>
+    
+                      <!-- Submitted Time -->
+                      <p class="mt-4 text-sm text-gray-500">
+                        Submitted on: \${new Date(testimonial.createdAt).toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                \`).join('');
+    
+                // Initialize Swiper
+                new Swiper('.testimonial-carousel', {
+                  slidesPerView: 3,
+                  spaceBetween: 16,
+                  loop: true,
+                  autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                  },
+                  pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                  },
+                });
+              } else {
+                console.error('Testimonials data is missing or invalid:', data);
+                swiperWrapper.innerHTML = '<p class="text-gray-500 italic">No testimonials to display.</p>';
+              }
+            })
+            .catch(error => {
+              console.error('Error fetching testimonials:', error);
+              const swiperWrapper = document.querySelector('.testimonial-carousel .swiper-wrapper');
+              swiperWrapper.innerHTML = '<p class="text-gray-500 italic">Failed to load testimonials. Please try again later.</p>';
+            });
+        });
+      </script>
+    `;
+  
     navigator.clipboard.writeText(embedCode);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -102,7 +242,7 @@ const SpaceDetailPage: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <button 
+      <button
         onClick={() => navigate('/dashboard')}
         className="flex items-center text-gray-600 hover:text-gray-900 mb-6"
       >
@@ -158,11 +298,46 @@ const SpaceDetailPage: React.FC = () => {
             {space?.testimonials?.length === 0 ? (
               <p className="text-gray-500 italic">No testimonials yet.</p>
             ) : (
-              <div className="space-y-4">
-                {space?.testimonials?.map((testimonial) => (
-                  <div key={testimonial.id} className="p-4 bg-gray-50 rounded-md">
-                    <p className="text-gray-700 italic">"{testimonial.feedback}"</p>
-                    <p className="text-gray-900 font-medium mt-2">— {testimonial.name}</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {space?.testimonials?.map((testimonial: any) => (
+                  <div key={testimonial._id} className="p-6 bg-white rounded-lg shadow-sm border border-gray-100">
+                    {/* User Info and Image */}
+                    <div className="flex items-center space-x-4">
+                      {testimonial.feedbackuserLogo && (
+                        <img
+                          src={testimonial.feedbackuserLogo}
+                          alt="User"
+                          className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
+                        />
+                      )}
+                      <div>
+                        <p className="text-lg font-semibold text-gray-900">{testimonial.name}</p>
+                        <p className="text-sm text-gray-500">{testimonial.email}</p>
+                      </div>
+                    </div>
+
+                    {/* Star Rating */}
+                    {testimonial.rating && (
+                      <div className="flex items-center mt-4">
+                        {[...Array(5)].map((_, index) => (
+                          <Star
+                            key={index}
+                            className={`h-5 w-5 ${
+                              index < testimonial.rating ? 'text-yellow-400' : 'text-gray-300'
+                            }`}
+                            fill={index < testimonial.rating ? 'currentColor' : 'none'}
+                          />
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Feedback */}
+                    <p className="mt-4 text-gray-700 italic">"{testimonial.feedback}"</p>
+
+                    {/* Submitted Time */}
+                    <p className="mt-4 text-sm text-gray-500">
+                      Submitted on: {new Date(testimonial.createdAt).toLocaleString()}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -176,12 +351,75 @@ const SpaceDetailPage: React.FC = () => {
         <Card>
           <CardHeader>
             <CardTitle>Embed Testimonials</CardTitle>
-            <CardDescription>Copy the embed code below to add testimonials to your site.</CardDescription>
+            <CardDescription>
+              Copy the embed code below to add testimonials to your site.
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="bg-gray-50 p-4 rounded-md font-mono text-sm overflow-x-auto">
-              <code>{`<div id="testimonial-widget" data-space-id="${space.id}"></div>
+            {/* Embed Code Section */}
+            <div className="bg-gray-50 p-4 rounded-md font-mono text-sm overflow-x-auto mb-6">
+              <code>{`<div id="testimonial-widget" data-space-id="${id}"></div>
 <script src="${window.location.origin}/testimonial-widget.js"></script>`}</code>
+            </div>
+
+            {/* Preview Section */}
+            <div className="mt-6">
+              <h3 className="text-lg font-semibold mb-4">Preview</h3>
+              <div className="p-6 bg-gray-100 rounded-lg">
+                {space.testimonials.length === 0 ? (
+                  <p className="text-gray-500 italic">No testimonials to display.</p>
+                ) : (
+                  <div className="testimonial-carousel swiper-container overflow-hidden">
+                    <div className="swiper-wrapper">
+                      {space.testimonials.map((testimonial: any) => (
+                        <div key={testimonial._id} className="swiper-slide">
+                          <div className="p-6 bg-white rounded-lg shadow-sm border border-gray-100">
+                            {/* User Info and Image */}
+                            <div className="flex items-center space-x-4">
+                              {testimonial.feedbackuserLogo && (
+                                <img
+                                  src={testimonial.feedbackuserLogo}
+                                  alt="User"
+                                  className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
+                                />
+                              )}
+                              <div>
+                                <p className="text-lg font-semibold text-gray-900">{testimonial.name}</p>
+                                <p className="text-sm text-gray-500">{testimonial.email}</p>
+                              </div>
+                            </div>
+
+                            {/* Star Rating */}
+                            {testimonial.rating && (
+                              <div className="flex items-center mt-4">
+                                {[...Array(5)].map((_, index) => (
+                                  <Star
+                                    key={index}
+                                    className={`h-5 w-5 ${
+                                      index < testimonial.rating ? 'text-yellow-400' : 'text-gray-300'
+                                    }`}
+                                    fill={index < testimonial.rating ? 'currentColor' : 'none'}
+                                  />
+                                ))}
+                              </div>
+                            )}
+
+                            {/* Feedback */}
+                            <p className="mt-4 text-gray-700 italic">"{testimonial.feedback}"</p>
+
+                            {/* Submitted Time */}
+                            <p className="mt-4 text-sm text-gray-500">
+                              Submitted on: {new Date(testimonial.createdAt).toLocaleString()}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    {/* Pagination Dots */}
+                    <div className="swiper-pagination"></div>
+                  </div>
+                )}
+              </div>
             </div>
           </CardContent>
           <CardFooter>
@@ -193,7 +431,7 @@ const SpaceDetailPage: React.FC = () => {
         </Card>
       )}
 
-      {/* Edit Space Tab */}
+      {/* Edit Tab */}
       {activeTab === 'edit' && (
         <Card>
           <CardHeader className="flex flex-col items-center text-center">

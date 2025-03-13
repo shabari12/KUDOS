@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { MessageSquare, Upload, Check, Star } from 'lucide-react';
 import { Card, CardContent } from '../../components/ui/Card';
@@ -20,12 +20,14 @@ interface TestimonialFormData {
 
 const SubmitTestimonialPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [space, setSpace] = useState<any>({
     testimonials: [],
     Questions: [],
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [rating, setRating] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<TestimonialFormData>();
 
   useEffect(() => {
@@ -45,12 +47,40 @@ const SubmitTestimonialPage: React.FC = () => {
     loadSpace();
   }, [id]);
 
-  const onSubmit = (data: TestimonialFormData) => {
+  const onSubmit = async (data: TestimonialFormData) => {
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("email", data.email);
+    formData.append("permission", data.permission.toString());
+    formData.append("feedback", data.feedback);
+
     if (space.CollectStarRating) {
-      data.rating = rating;
+      formData.append("rating", rating.toString());
     }
-    console.log('Testimonial Data:', data);
-    setIsSubmitted(true);
+
+    if (data.photo && data.photo[0]) {
+      formData.append("feedbackuserLogo", data.photo[0]);
+    }
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/feedback/submit-feedback/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (response.status === 200 || response.status === 201) {
+        console.log("Testimonial Data:", data);
+        setIsSubmitted(true);
+      }
+    } catch (error) {
+      console.error('Error submitting testimonial:', error);
+    }
   };
 
   if (!space) {
@@ -111,7 +141,7 @@ const SubmitTestimonialPage: React.FC = () => {
             />
           )}
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Write text testimonial to {space.name}
+            Drop your testimonial for {space.spaceName}
           </h2>
         </div>
       </div>
@@ -129,15 +159,27 @@ const SubmitTestimonialPage: React.FC = () => {
                       <label className="block text-sm font-medium text-gray-700">
                         {question}
                       </label>
-                      <TextArea
-                        rows={3}
-                        {...register(`feedback${index}`, {
-                          required: 'This field is required',
-                        })}
-                      />
                     </li>
                   ))}
                 </ul>
+              </div>
+
+              {/* Feedback TextArea */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Your Feedback
+                </label>
+                <TextArea
+                  rows={6}
+                  {...register('feedback', {
+                    required: 'Feedback is required',
+                  })}
+                />
+                {errors.feedback && (
+                  <p className="text-sm text-red-600">
+                    {errors.feedback.message}
+                  </p>
+                )}
               </div>
 
               {/* Star Rating */}
@@ -162,18 +204,6 @@ const SubmitTestimonialPage: React.FC = () => {
                   </div>
                 </div>
               )}
-
-              {/* File Upload */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Attach Image(s)
-                </label>
-                <input
-                  type="file"
-                  {...register('mediaUrl')}
-                  className="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 p-2"
-                />
-              </div>
 
               {/* Name */}
               <div>

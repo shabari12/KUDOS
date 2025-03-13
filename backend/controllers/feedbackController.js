@@ -8,8 +8,10 @@ const submitFeedback = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { email, name, feedback, rating } = req.body;
+  const { email, name, rating, permission,feedback } = req.body;
   const { spaceId } = req.params;
+
+
 
   try {
     const space = await spaceModel.findById(spaceId);
@@ -23,6 +25,7 @@ const submitFeedback = async (req, res) => {
       feedbackuserLogo: req.file.buffer,
       feedback,
       rating,
+      permission, 
       space: space._id,
     });
 
@@ -51,7 +54,16 @@ const getFeedback = async (req, res) => {
 
     const feedbacks = await feedbackModel.find({ space: space._id });
 
-    return res.status(200).json({ feedbacks });
+    
+    const formattedFeedbacks = feedbacks.map((feedback) => ({
+      ...feedback._doc,
+      feedbackuserLogo: feedback.feedbackuserLogo
+        ? `data:image/png;base64,${feedback.feedbackuserLogo.toString("base64")}`
+        : null,
+      
+    }));
+
+    return res.status(200).json({ feedbacks: formattedFeedbacks });
   } catch (error) {
     console.error("Error getting feedback:", error);
     return res.status(500).json({ msg: "Failed to get feedback" });
