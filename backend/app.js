@@ -8,7 +8,14 @@ const connectToDB = require("./db/db");
 const userRoutes = require("./routes/userRoutes");
 const spaceRoutes = require("./routes/spaceRoutes");
 const feedbackRoutes = require("./routes/feedbackRoutes");
-app.use(cors());
+
+// Configure CORS
+const corsOptions = {
+  origin: 'https://kudos-webapp.vercel.app', // Allow requests from this origin
+  credentials: true, // Allow cookies to be sent
+};
+app.use(cors(corsOptions));
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -22,6 +29,5 @@ app.get("/", (req, res) => {
 app.use("/users", userRoutes);
 app.use("/spaces", spaceRoutes);
 app.use('/feedback', feedbackRoutes);
-
 
 module.exports = app;
