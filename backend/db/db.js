@@ -5,6 +5,7 @@ function connectToDB() {
     .connect(process.env.DB_CONNECT, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 10000,
     })
     .then(() => {
       console.log("Connected to the database");
