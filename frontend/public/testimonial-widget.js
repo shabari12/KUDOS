@@ -1,185 +1,214 @@
-(function() {
-  // Find the widget container
-  const widgetContainer = document.getElementById('testimonial-widget');
-  if (!widgetContainer) return;
-  
-  // Get the space ID from the data attribute
-  const spaceId = widgetContainer.getAttribute('data-space-id');
-  if (!spaceId) {
-    console.error('Testimonial widget: No space ID provided');
-    return;
-  }
-  
-  // Create widget styles
-  const style = document.createElement('style');
+document.addEventListener("DOMContentLoaded", function () {
+  // Inject CSS into the document
+  const style = document.createElement("style");
   style.textContent = `
-    .testimonial-widget {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      max-width: 100%;
+    .testimonial-carousel {
+      width: 80%;
+      
+      margin: auto;
+      overflow: hidden;
+      position: relative;
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     }
-    .testimonial-widget__header {
-      margin-bottom: 1rem;
+
+    .slider-wrapper {
+    justify-content: center;
+    align-items: center;
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .slide-container {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      width: 80%;
+    }
+
+    .slide {
+      flex: 1;
+      min-width: 30%;
+      padding: 20px;
       text-align: center;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     }
-    .testimonial-widget__title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #1a202c;
-      margin: 0 0 0.5rem 0;
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 10px;
     }
-    .testimonial-widget__items {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1rem;
+
+    .user-info img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #ddd;
     }
-    .testimonial-widget__item {
-      background-color: #f7fafc;
-      border-radius: 0.5rem;
-      padding: 1.5rem;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+    .user-name {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
     }
-    .testimonial-widget__quote {
+
+    .user-email {
+      font-size: 12px;
+      color: #777;
+    }
+
+    .rating {
+      display: flex;
+      justify-content: center;
+      margin: 10px 0;
+    }
+
+    .star {
+      font-size: 20px;
+      color: #ffcc00;
+      margin: 0 2px;
+    }
+
+    .empty-star {
+      color: #ddd;
+    }
+
+    .feedback-text {
+      font-size: 14px;
+      color: #555;
       font-style: italic;
-      color: #4a5568;
-      margin: 0 0 1rem 0;
-      line-height: 1.5;
+      margin: 10px 0;
     }
-    .testimonial-widget__author {
-      font-weight: 600;
-      color: #2d3748;
-      margin: 0;
-    }
-    .testimonial-widget__date {
-      color: #718096;
-      font-size: 0.875rem;
-      margin: 0.25rem 0 0 0;
-    }
-    .testimonial-widget__media {
-      margin-top: 1rem;
-      max-width: 100%;
-      border-radius: 0.25rem;
-    }
-    .testimonial-widget__footer {
-      margin-top: 1rem;
-      text-align: center;
-      font-size: 0.75rem;
-      color: #a0aec0;
-    }
-    .testimonial-widget__link {
-      color: #4299e1;
-      text-decoration: none;
-    }
-    .testimonial-widget__link:hover {
-      text-decoration: underline;
-    }
-    .testimonial-widget__empty {
-      text-align: center;
-      padding: 2rem;
-      color: #718096;
-      font-style: italic;
+
+    .submitted-date {
+      font-size: 12px;
+      color: #999;
+      margin-top: 10px;
     }
   `;
   document.head.appendChild(style);
-  
-  // Function to format date
-  function formatDate(dateString) {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    }).format(date);
+
+  const scriptElement = document.querySelector("script[data-space-id]");
+
+  if (!scriptElement) {
+    console.error("Script element not found.");
+    return;
   }
-  
-  // Fetch testimonials from localStorage (in a real app, this would be an API call)
-  function fetchTestimonials() {
-    try {
-      const spacesJson = localStorage.getItem('spaces');
-      if (!spacesJson) return [];
-      
-      const spaces = JSON.parse(spacesJson);
-      const space = spaces.find(s => s.id === spaceId);
-      
-      return space ? space.testimonials : [];
-    } catch (error) {
-      console.error('Error fetching testimonials:', error);
-      return [];
-    }
+
+  const spaceId = scriptElement.getAttribute("data-space-id");
+
+  if (!spaceId) {
+    console.error("data-space-id attribute is missing.");
+    return;
   }
-  
-  // Render the widget
-  function renderWidget() {
-    const testimonials = fetchTestimonials();
-    
-    // Create widget container
-    const widget = document.createElement('div');
-    widget.className = 'testimonial-widget';
-    
-    // Create header
-    const header = document.createElement('div');
-    header.className = 'testimonial-widget__header';
-    
-    const title = document.createElement('h3');
-    title.className = 'testimonial-widget__title';
-    title.textContent = 'What Our Customers Say';
-    header.appendChild(title);
-    
-    widget.appendChild(header);
-    
-    // Create testimonials container
-    const itemsContainer = document.createElement('div');
-    itemsContainer.className = 'testimonial-widget__items';
-    
-    if (testimonials.length === 0) {
-      const emptyMessage = document.createElement('div');
-      emptyMessage.className = 'testimonial-widget__empty';
-      emptyMessage.textContent = 'No testimonials available yet.';
-      widget.appendChild(emptyMessage);
-    } else {
-      // Add testimonials
-      testimonials.forEach(testimonial => {
-        const item = document.createElement('div');
-        item.className = 'testimonial-widget__item';
-        
-        const quote = document.createElement('p');
-        quote.className = 'testimonial-widget__quote';
-        quote.textContent = `"${testimonial.feedback}"`;
-        item.appendChild(quote);
-        
-        const author = document.createElement('p');
-        author.className = 'testimonial-widget__author';
-        author.textContent = testimonial.name;
-        item.appendChild(author);
-        
-        const date = document.createElement('p');
-        date.className = 'testimonial-widget__date';
-        date.textContent = formatDate(testimonial.date);
-        item.appendChild(date);
-        
-        if (testimonial.mediaUrl) {
-          const media = document.createElement('img');
-          media.className = 'testimonial-widget__media';
-          media.src = testimonial.mediaUrl;
-          media.alt = `Media from ${testimonial.name}`;
-          item.appendChild(media);
+
+  console.log("Space ID:", spaceId);
+
+  fetch(`http://localhost:4000/feedback/get-feedback`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ spaceId: spaceId }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Testimonials Data:", data);
+      const sliderContainer = document.querySelector(".testimonial-carousel");
+      const sliderWrapper = document.createElement("div");
+      sliderWrapper.classList.add("slider-wrapper");
+
+      if (data.feedbacks && Array.isArray(data.feedbacks)) {
+        let testimonials = data.feedbacks;
+
+        // If there are fewer than 3 testimonials, duplicate them
+        while (testimonials.length < 3) {
+          testimonials = [...testimonials, ...testimonials].slice(0, 3);
         }
-        
-        itemsContainer.appendChild(item);
-      });
-      
-      widget.appendChild(itemsContainer);
-    }
-    
-    // Create footer
-    const footer = document.createElement('div');
-    footer.className = 'testimonial-widget__footer';
-    footer.innerHTML = 'Powered by <a href="/" class="testimonial-widget__link" target="_blank">TestiCollect</a>';
-    widget.appendChild(footer);
-    
-    // Add the widget to the container
-    widgetContainer.appendChild(widget);
-  }
-  
-  // Initialize the widget
-  renderWidget();
-})();
+
+        // Group testimonials into sets of 3
+        const groupedTestimonials = [];
+        for (let i = 0; i < testimonials.length; i += 3) {
+          groupedTestimonials.push(testimonials.slice(i, i + 3));
+        }
+
+        // Function to generate HTML for a group of 3 testimonials
+        function generateSlideHtml(group) {
+          return `
+            <div class="slide-container">
+              ${group
+                .map(
+                  (testimonial) => `
+                  <div class="slide">
+                    <div class="user-info">
+                      ${
+                        testimonial.feedbackuserLogo
+                          ? `<img src="${testimonial.feedbackuserLogo}" alt="User">`
+                          : ""
+                      }
+                      <div>
+                        <p class="user-name">${testimonial.name}</p>
+                        <p class="user-email">${testimonial.email}</p>
+                      </div>
+                    </div>
+
+                    <div class="rating">
+                      ${[...Array(5)]
+                        .map(
+                          (_, index) =>
+                            `<span class="star ${
+                              index < testimonial.rating ? "" : "empty-star"
+                            }">★</span>`
+                        )
+                        .join("")}
+                    </div>
+
+                    <p class="feedback-text">"${testimonial.feedback}"</p>
+                    <p class="submitted-date">Submitted on: ${new Date(
+                      testimonial.createdAt
+                    ).toLocaleString()}</p>
+                  </div>
+                `
+                )
+                .join("")}
+            </div>
+          `;
+        }
+
+        // Generate slides and append them
+        let currentIndex = 0;
+        function updateSlider() {
+          sliderWrapper.innerHTML = generateSlideHtml(
+            groupedTestimonials[currentIndex]
+          );
+          currentIndex = (currentIndex + 1) % groupedTestimonials.length;
+        }
+
+        updateSlider(); // Show first set of 3 testimonials
+        sliderContainer.appendChild(sliderWrapper);
+        setInterval(updateSlider, 3000); // Change slides every 3 seconds
+      } else {
+        console.error("Testimonials data is missing or invalid:", data);
+        sliderContainer.innerHTML =
+          '<p class="text-gray-500 italic">No testimonials to display.</p>';
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching testimonials:", error);
+      document.querySelector(".testimonial-carousel").innerHTML =
+        '<p class="text-gray-500 italic">Failed to load testimonials. Please try again later.</p>';
+    });
+});

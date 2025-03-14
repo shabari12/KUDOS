@@ -53,7 +53,7 @@ const CreateSpacePage: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className=" container mx-auto px-4 py-8">
       <button 
         onClick={() => navigate('/dashboard')}
         className="flex items-center text-gray-600 hover:text-gray-900 mb-6"
@@ -159,7 +159,7 @@ const CreateSpacePage: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Collect Star Rating</label>
+                <label className=" block text-sm font-medium text-gray-700">Collect Star Rating</label>
                 <div className="mt-2 space-y-2">
                   <div className="flex items-center">
                     <input

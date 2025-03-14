@@ -82,111 +82,19 @@ const SpaceDetailPage: React.FC = () => {
     const embedCode = `
       <!-- Swiper CSS -->
       <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-    
-      <!-- Swiper Container -->
-      <div class="mt-6">
-        <h3 class="text-lg font-semibold mb-4">Preview</h3>
-        <div class="p-6 bg-gray-100 rounded-lg">
-          <div class="testimonial-carousel swiper-container overflow-hidden">
-            <div class="swiper-wrapper">
-              <!-- Testimonial Slides will be dynamically inserted here -->
-            </div>
-            <!-- Pagination Dots -->
-            <div class="swiper-pagination"></div>
-          </div>
-        </div>
+  
+      <!-- Testimonial Widget Container -->
+      <div class="testimonial-carousel swiper-container overflow-hidden">
+        <div class="swiper-wrapper"></div>
+        <!-- Pagination Dots -->
+        <div class="swiper-pagination"></div>
       </div>
-    
+  
       <!-- Swiper JS -->
       <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-    
+  
       <!-- Testimonial Widget Script -->
-      <script>
-        document.addEventListener('DOMContentLoaded', function () {
-          // Fetch testimonials for the given space ID
-          const spaceId = "${id}";
-          fetch(\`http://localhost:4000/feedback/get-feedback\`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ spaceId: spaceId }),
-          })
-            .then(response => {
-              if (!response.ok) {
-                throw new Error('Network response was not ok');
-              }
-              return response.json();
-            })
-            .then(data => {
-              const swiperWrapper = document.querySelector('.testimonial-carousel .swiper-wrapper');
-              if (data.feedbacks && Array.isArray(data.feedbacks)) {
-                swiperWrapper.innerHTML = data.feedbacks.map(testimonial => \`
-                  <div class="swiper-slide">
-                    <div class="p-6 bg-white rounded-lg shadow-sm border border-gray-100">
-                      <!-- User Info and Image -->
-                      <div class="flex items-center space-x-4">
-                        \${testimonial.feedbackuserLogo ? \`
-                          <img
-                            src="\${testimonial.feedbackuserLogo}"
-                            alt="User"
-                            class="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
-                          />
-                        \` : ''}
-                        <div>
-                          <p class="text-lg font-semibold text-gray-900">\${testimonial.name}</p>
-                          <p class="text-sm text-gray-500">\${testimonial.email}</p>
-                        </div>
-                      </div>
-    
-                      <!-- Star Rating -->
-                      \${testimonial.rating ? \`
-                        <div class="flex items-center mt-4">
-                          \${[...Array(5)].map((_, index) => \`
-                            <span class="\${index < testimonial.rating ? 'text-yellow-400' : 'text-gray-300'}">
-                              ★
-                            </span>
-                          \`).join('')}
-                        </div>
-                      \` : ''}
-    
-                      <!-- Feedback -->
-                      <p class="mt-4 text-gray-700 italic">"\${testimonial.feedback}"</p>
-    
-                      <!-- Submitted Time -->
-                      <p class="mt-4 text-sm text-gray-500">
-                        Submitted on: \${new Date(testimonial.createdAt).toLocaleString()}
-                      </p>
-                    </div>
-                  </div>
-                \`).join('');
-    
-                // Initialize Swiper
-                new Swiper('.testimonial-carousel', {
-                  slidesPerView: 3,
-                  spaceBetween: 16,
-                  loop: true,
-                  autoplay: {
-                    delay: 3000,
-                    disableOnInteraction: false,
-                  },
-                  pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true,
-                  },
-                });
-              } else {
-                console.error('Testimonials data is missing or invalid:', data);
-                swiperWrapper.innerHTML = '<p class="text-gray-500 italic">No testimonials to display.</p>';
-              }
-            })
-            .catch(error => {
-              console.error('Error fetching testimonials:', error);
-              const swiperWrapper = document.querySelector('.testimonial-carousel .swiper-wrapper');
-              swiperWrapper.innerHTML = '<p class="text-gray-500 italic">Failed to load testimonials. Please try again later.</p>';
-            });
-        });
-      </script>
+      <script src="${window.location.origin}/testimonial-widget.js" data-space-id="${id}"></script>
     `;
   
     navigator.clipboard.writeText(embedCode);
@@ -348,88 +256,103 @@ const SpaceDetailPage: React.FC = () => {
 
       {/* Embed Tab */}
       {activeTab === 'embed' && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Embed Testimonials</CardTitle>
-            <CardDescription>
-              Copy the embed code below to add testimonials to your site.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {/* Embed Code Section */}
-            <div className="bg-gray-50 p-4 rounded-md font-mono text-sm overflow-x-auto mb-6">
-              <code>{`<div id="testimonial-widget" data-space-id="${id}"></div>
-<script src="${window.location.origin}/testimonial-widget.js"></script>`}</code>
-            </div>
+  <Card>
+    <CardHeader>
+      <CardTitle>Embed Testimonials</CardTitle>
+      <CardDescription>
+        Copy the embed code below to add testimonials to your site.
+      </CardDescription>
+    </CardHeader>
+    <CardContent>
+      {/* Embed Code Section */}
+      <div className="bg-gray-50 p-4 rounded-md font-mono text-sm overflow-x-auto mb-6">
+        <code>{`
+          <!-- Swiper CSS -->
+          <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 
-            {/* Preview Section */}
-            <div className="mt-6">
-              <h3 className="text-lg font-semibold mb-4">Preview</h3>
-              <div className="p-6 bg-gray-100 rounded-lg">
-                {space.testimonials.length === 0 ? (
-                  <p className="text-gray-500 italic">No testimonials to display.</p>
-                ) : (
-                  <div className="testimonial-carousel swiper-container overflow-hidden">
-                    <div className="swiper-wrapper">
-                      {space.testimonials.map((testimonial: any) => (
-                        <div key={testimonial._id} className="swiper-slide">
-                          <div className="p-6 bg-white rounded-lg shadow-sm border border-gray-100">
-                            {/* User Info and Image */}
-                            <div className="flex items-center space-x-4">
-                              {testimonial.feedbackuserLogo && (
-                                <img
-                                  src={testimonial.feedbackuserLogo}
-                                  alt="User"
-                                  className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
-                                />
-                              )}
-                              <div>
-                                <p className="text-lg font-semibold text-gray-900">{testimonial.name}</p>
-                                <p className="text-sm text-gray-500">{testimonial.email}</p>
-                              </div>
-                            </div>
+          <!-- Testimonial Widget Container -->
+          <div class="testimonial-carousel swiper-container overflow-hidden">
+            <div class="swiper-wrapper"></div>
+            <!-- Pagination Dots -->
+            <div class="swiper-pagination"></div>
+          </div>
 
-                            {/* Star Rating */}
-                            {testimonial.rating && (
-                              <div className="flex items-center mt-4">
-                                {[...Array(5)].map((_, index) => (
-                                  <Star
-                                    key={index}
-                                    className={`h-5 w-5 ${
-                                      index < testimonial.rating ? 'text-yellow-400' : 'text-gray-300'
-                                    }`}
-                                    fill={index < testimonial.rating ? 'currentColor' : 'none'}
-                                  />
-                                ))}
-                              </div>
-                            )}
+          <!-- Swiper JS -->
+          <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
-                            {/* Feedback */}
-                            <p className="mt-4 text-gray-700 italic">"{testimonial.feedback}"</p>
+          <!-- Testimonial Widget Script -->
+          <script src="${window.location.origin}/testimonial-widget.js" data-space-id="${id}"></script>
+        `}</code>
+      </div>
 
-                            {/* Submitted Time */}
-                            <p className="mt-4 text-sm text-gray-500">
-                              Submitted on: {new Date(testimonial.createdAt).toLocaleString()}
-                            </p>
-                          </div>
+      {/* Preview Section */}
+      <div className="mt-6">
+        <h3 className="text-lg font-semibold mb-4">Preview</h3>
+        <div className="p-6 bg-gray-100 rounded-lg">
+          {space.testimonials.length === 0 ? (
+            <p className="text-gray-500 italic">No testimonials to display.</p>
+          ) : (
+            <div className="testimonial-carousel swiper-container overflow-hidden">
+              <div className="swiper-wrapper">
+                {space.testimonials.map((testimonial: any) => (
+                  <div key={testimonial._id} className="swiper-slide">
+                    <div className="p-6 bg-white rounded-lg shadow-sm border border-gray-100">
+                      {/* User Info and Image */}
+                      <div className="flex items-center space-x-4">
+                        {testimonial.feedbackuserLogo && (
+                          <img
+                            src={testimonial.feedbackuserLogo}
+                            alt="User"
+                            className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
+                          />
+                        )}
+                        <div>
+                          <p className="text-lg font-semibold text-gray-900">{testimonial.name}</p>
+                          <p className="text-sm text-gray-500">{testimonial.email}</p>
                         </div>
-                      ))}
+                      </div>
+
+                      {/* Star Rating */}
+                      {testimonial.rating && (
+                        <div className="flex items-center mt-4">
+                          {[...Array(5)].map((_, index) => (
+                            <Star
+                              key={index}
+                              className={`h-5 w-5 ${
+                                index < testimonial.rating ? 'text-yellow-400' : 'text-gray-300'
+                              }`}
+                              fill={index < testimonial.rating ? 'currentColor' : 'none'}
+                            />
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Feedback */}
+                      <p className="mt-4 text-gray-700 italic">"{testimonial.feedback}"</p>
+
+                      {/* Submitted Time */}
+                      <p className="mt-4 text-sm text-gray-500">
+                        Submitted on: {new Date(testimonial.createdAt).toLocaleString()}
+                      </p>
                     </div>
-                    {/* Pagination Dots */}
-                    <div className="swiper-pagination"></div>
                   </div>
-                )}
+                ))}
               </div>
+              {/* Pagination Dots */}
+              <div className="swiper-pagination"></div>
             </div>
-          </CardContent>
-          <CardFooter>
-            <Button onClick={handleCopyEmbed} className="flex items-center">
-              <Copy className="h-4 w-4 mr-2" />
-              {copied ? 'Copied!' : 'Copy Embed Code'}
-            </Button>
-          </CardFooter>
-        </Card>
-      )}
+          )}
+        </div>
+      </div>
+    </CardContent>
+    <CardFooter>
+      <Button onClick={handleCopyEmbed} className="flex items-center">
+        <Copy className="h-4 w-4 mr-2" />
+        {copied ? 'Copied!' : 'Copy Embed Code'}
+      </Button>
+    </CardFooter>
+  </Card>
+)}
 
       {/* Edit Tab */}
       {activeTab === 'edit' && (
