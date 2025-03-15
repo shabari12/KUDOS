@@ -53,7 +53,7 @@ const LoginPage: React.FC = () => {
             <CardContent className="p-6 space-y-6">
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                 <Input
-                className='text-white'
+                
                   label="Email address"
                   type="email"
                   autoComplete="email"
@@ -69,7 +69,7 @@ const LoginPage: React.FC = () => {
                 
                 <Input
                   label="Password"
-                  className='text-white'
+                  
                   type="password"
                   autoComplete="current-password"
                   error={errors.password?.message}
