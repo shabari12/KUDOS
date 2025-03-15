@@ -1,0 +1,12 @@
+{
+    "routes": [
+      {
+        "src": "/submit/.*",
+        "dest": "/index.html"
+      },
+      {
+        "src": "/.*",
+        "dest": "/index.html"
+      }
+    ]
+  }
