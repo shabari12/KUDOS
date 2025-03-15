@@ -207,8 +207,9 @@ const SubmitTestimonialPage: React.FC = () => {
 
               {/* Name */}
               <div>
+              <p className='text-black block text-sm font-medium mb-1'>Name</p>
                 <Input
-                  label="Your Name *"
+                 
                   autoComplete="name"
                   error={errors.name?.message}
                   {...register('name', {
@@ -222,9 +223,11 @@ const SubmitTestimonialPage: React.FC = () => {
               </div>
 
               {/* Email */}
-              <div>
+              <div className='text-black'>
+                <p className='text-black block text-sm font-medium mb-1'>Your Email</p>
                 <Input
-                  label="Your Email *"
+                className='text-black'
+                 
                   type="email"
                   autoComplete="email"
                   error={errors.email?.message}
