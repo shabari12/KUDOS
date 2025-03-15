@@ -82,21 +82,21 @@ const SpaceDetailPage: React.FC = () => {
     const embedCode = `
       <!-- Swiper CSS -->
       <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-  
+    
       <!-- Testimonial Widget Container -->
       <div class="testimonial-carousel swiper-container overflow-hidden">
         <div class="swiper-wrapper"></div>
         <!-- Pagination Dots -->
         <div class="swiper-pagination"></div>
       </div>
-  
+    
       <!-- Swiper JS -->
       <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-  
+    
       <!-- Testimonial Widget Script -->
-      <script src="https://kudos-webapp.vercel.app/testimonial-widget.js" data-space-id="${id}"></script>
+      <script src="${window.location.origin}/testimonial-widget.js" data-space-id="${id}"></script>
     `;
-  
+    
     navigator.clipboard.writeText(embedCode);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
