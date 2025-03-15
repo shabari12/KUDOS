@@ -149,66 +149,154 @@ const SpaceDetailPage: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <button
-        onClick={() => navigate('/dashboard')}
-        className="flex items-center text-gray-600 hover:text-gray-900 mb-6"
-      >
-        <ArrowLeft className="h-4 w-4 mr-2" />
-        Back to Dashboard
-      </button>
+    <div className="min-h-screen relative bg-gradient-to-b from-[#8EC5FC] to-[#E0C3FC] bg-cover bg-center"><div className="container mx-auto px-4 py-8 ">
+    <button
+      onClick={() => navigate('/dashboard')}
+      className="flex items-center text-gray-600 hover:text-gray-900 mb-6"
+    >
+      <ArrowLeft className="h-4 w-4 mr-2" />
+      Back to Dashboard
+    </button>
 
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">{space.spaceName}</h1>
-          <p className="text-gray-600 mt-1">{space.customMessage}</p>
-        </div>
-        <div className="mt-4 md:mt-0 flex space-x-3">
-          <Button variant="outline" className="flex items-center" onClick={handleCopyLink}>
-            <Share2 className="h-4 w-4 mr-2" />
-            {copied ? 'Copied!' : 'Copy Share Link'}
-          </Button>
-          <Button className="flex items-center" onClick={() => window.open(space.shareLink, '_blank')}>
-            <ExternalLink className="h-4 w-4 mr-2" />
-            View Form
-          </Button>
-        </div>
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900">{space.spaceName}</h1>
+        <p className="text-gray-600 mt-1">{space.customMessage}</p>
       </div>
-
-      {/* Tabs */}
-      <div className="mb-6">
-        <div className="border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8">
-            {['testimonials', 'embed', 'edit'].map((tab) => (
-              <button
-                key={tab}
-                className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === tab
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-                onClick={() => setActiveTab(tab as 'testimonials' | 'embed' | 'edit')}
-              >
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </button>
-            ))}
-          </nav>
-        </div>
+      <div className="mt-4 md:mt-0 flex space-x-3">
+        <Button variant="outline" className="flex items-center" onClick={handleCopyLink}>
+          <Share2 className="h-4 w-4 mr-2" />
+          {copied ? 'Copied!' : 'Copy Share Link'}
+        </Button>
+        <Button className="flex items-center" onClick={() => window.open(space.shareLink, '_blank')}>
+          <ExternalLink className="h-4 w-4 mr-2" />
+          View Form
+        </Button>
       </div>
+    </div>
 
-      {/* Testimonials Tab */}
-      {activeTab === 'testimonials' && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Testimonials</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {space?.testimonials?.length === 0 ? (
-              <p className="text-gray-500 italic">No testimonials yet.</p>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {space?.testimonials?.map((testimonial: any) => (
-                  <div key={testimonial._id} className="p-6 bg-white rounded-lg shadow-sm border border-gray-100">
+    {/* Tabs */}
+    <div className="mb-6">
+      <div className="border-b border-gray-200">
+        <nav className="-mb-px flex space-x-8">
+          {['testimonials', 'embed', 'edit'].map((tab) => (
+            <button
+              key={tab}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === tab
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+              onClick={() => setActiveTab(tab as 'testimonials' | 'embed' | 'edit')}
+            >
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </button>
+          ))}
+        </nav>
+      </div>
+    </div>
+
+    {/* Testimonials Tab */}
+    {activeTab === 'testimonials' && (
+      <Card className=''>
+        <CardHeader>
+          <CardTitle>Testimonials</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {space?.testimonials?.length === 0 ? (
+            <p className="text-gray-500 italic">No testimonials yet.</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {space?.testimonials?.map((testimonial: any) => (
+                <div key={testimonial._id} className="p-6 h-full hover:shadow-md transition-shadow duration-200 rounded-lg shadow-lg bg-white/30 backdrop-blur-md border border-white/20 rounded-lg shadow-sm border border-gray-100">
+                  {/* User Info and Image */}
+                  <div className="flex items-center space-x-4">
+                    {testimonial.feedbackuserLogo && (
+                      <img
+                        src={testimonial.feedbackuserLogo}
+                        alt="User"
+                        className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
+                      />
+                    )}
+                    <div>
+                      <p className="text-lg font-semibold text-gray-900">{testimonial.name}</p>
+                      <p className="text-sm text-gray-500">{testimonial.email}</p>
+                    </div>
+                  </div>
+
+                  {/* Star Rating */}
+                  {testimonial.rating && (
+                    <div className="flex items-center mt-4">
+                      {[...Array(5)].map((_, index) => (
+                        <Star
+                          key={index}
+                          className={`h-5 w-5 ${
+                            index < testimonial.rating ? 'text-yellow-400' : 'text-gray-300'
+                          }`}
+                          fill={index < testimonial.rating ? 'currentColor' : 'none'}
+                        />
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Feedback */}
+                  <p className="mt-4 text-gray-700 italic">"{testimonial.feedback}"</p>
+
+                  {/* Submitted Time */}
+                  <p className="mt-4 text-sm text-gray-500">
+                    Submitted on: {new Date(testimonial.createdAt).toLocaleString()}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    )}
+
+    {/* Embed Tab */}
+    {activeTab === 'embed' && (
+<Card>
+  <CardHeader>
+    <CardTitle>Embed Testimonials</CardTitle>
+    <CardDescription>
+      Copy the embed code below to add testimonials to your site.
+    </CardDescription>
+  </CardHeader>
+  <CardContent>
+    {/* Embed Code Section */}
+    <div className="bg-gray-50 p-4 rounded-md font-mono text-sm overflow-x-auto mb-6">
+      <code>{`
+        <!-- Swiper CSS -->
+        <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+        <!-- Testimonial Widget Container -->
+        <div class="testimonial-carousel swiper-container overflow-hidden">
+          <div class="swiper-wrapper"></div>
+          <!-- Pagination Dots -->
+          <div class="swiper-pagination"></div>
+        </div>
+
+        <!-- Swiper JS -->
+        <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+        <!-- Testimonial Widget Script -->
+        <script src="${window.location.origin}/testimonial-widget.js" data-space-id="${id}"></script>
+      `}</code>
+    </div>
+
+    {/* Preview Section */}
+    <div className="mt-6">
+      <h3 className="text-lg font-semibold mb-4">Preview</h3>
+      <div className="p-6 bg-gray-100 rounded-lg">
+        {space.testimonials.length === 0 ? (
+          <p className="text-gray-500 italic">No testimonials to display.</p>
+        ) : (
+          <div className="testimonial-carousel swiper-container overflow-hidden">
+            <div className="swiper-wrapper">
+              {space.testimonials.map((testimonial: any) => (
+                <div key={testimonial._id} className="swiper-slide">
+                  <div className="p-6 bg-white rounded-lg shadow-sm border border-gray-100">
                     {/* User Info and Image */}
                     <div className="flex items-center space-x-4">
                       {testimonial.feedbackuserLogo && (
@@ -247,214 +335,127 @@ const SpaceDetailPage: React.FC = () => {
                       Submitted on: {new Date(testimonial.createdAt).toLocaleString()}
                     </p>
                   </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Embed Tab */}
-      {activeTab === 'embed' && (
-  <Card>
-    <CardHeader>
-      <CardTitle>Embed Testimonials</CardTitle>
-      <CardDescription>
-        Copy the embed code below to add testimonials to your site.
-      </CardDescription>
-    </CardHeader>
-    <CardContent>
-      {/* Embed Code Section */}
-      <div className="bg-gray-50 p-4 rounded-md font-mono text-sm overflow-x-auto mb-6">
-        <code>{`
-          <!-- Swiper CSS -->
-          <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-
-          <!-- Testimonial Widget Container -->
-          <div class="testimonial-carousel swiper-container overflow-hidden">
-            <div class="swiper-wrapper"></div>
-            <!-- Pagination Dots -->
-            <div class="swiper-pagination"></div>
-          </div>
-
-          <!-- Swiper JS -->
-          <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-
-          <!-- Testimonial Widget Script -->
-          <script src="${window.location.origin}/testimonial-widget.js" data-space-id="${id}"></script>
-        `}</code>
-      </div>
-
-      {/* Preview Section */}
-      <div className="mt-6">
-        <h3 className="text-lg font-semibold mb-4">Preview</h3>
-        <div className="p-6 bg-gray-100 rounded-lg">
-          {space.testimonials.length === 0 ? (
-            <p className="text-gray-500 italic">No testimonials to display.</p>
-          ) : (
-            <div className="testimonial-carousel swiper-container overflow-hidden">
-              <div className="swiper-wrapper">
-                {space.testimonials.map((testimonial: any) => (
-                  <div key={testimonial._id} className="swiper-slide">
-                    <div className="p-6 bg-white rounded-lg shadow-sm border border-gray-100">
-                      {/* User Info and Image */}
-                      <div className="flex items-center space-x-4">
-                        {testimonial.feedbackuserLogo && (
-                          <img
-                            src={testimonial.feedbackuserLogo}
-                            alt="User"
-                            className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
-                          />
-                        )}
-                        <div>
-                          <p className="text-lg font-semibold text-gray-900">{testimonial.name}</p>
-                          <p className="text-sm text-gray-500">{testimonial.email}</p>
-                        </div>
-                      </div>
-
-                      {/* Star Rating */}
-                      {testimonial.rating && (
-                        <div className="flex items-center mt-4">
-                          {[...Array(5)].map((_, index) => (
-                            <Star
-                              key={index}
-                              className={`h-5 w-5 ${
-                                index < testimonial.rating ? 'text-yellow-400' : 'text-gray-300'
-                              }`}
-                              fill={index < testimonial.rating ? 'currentColor' : 'none'}
-                            />
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Feedback */}
-                      <p className="mt-4 text-gray-700 italic">"{testimonial.feedback}"</p>
-
-                      {/* Submitted Time */}
-                      <p className="mt-4 text-sm text-gray-500">
-                        Submitted on: {new Date(testimonial.createdAt).toLocaleString()}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              {/* Pagination Dots */}
-              <div className="swiper-pagination"></div>
-            </div>
-          )}
-        </div>
-      </div>
-    </CardContent>
-    <CardFooter>
-      <Button onClick={handleCopyEmbed} className="flex items-center">
-        <Copy className="h-4 w-4 mr-2" />
-        {copied ? 'Copied!' : 'Copy Embed Code'}
-      </Button>
-    </CardFooter>
-  </Card>
-)}
-
-      {/* Edit Tab */}
-      {activeTab === 'edit' && (
-        <Card>
-          <CardHeader className="flex flex-col items-center text-center">
-            {isEditing ? (
-              <div className="mb-4 w-full">
-                <label className="block text-gray-700 text-sm font-bold mb-2">Space Logo</label>
-                <input
-                  type="file"
-                  onChange={(e) => setEditedSpace({ ...editedSpace, spaceLogo: e.target.files?.[0] })}
-                  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 p-2"
-                />
-              </div>
-            ) : (
-              space.spaceLogo && (
-                <img
-                  src={space.spaceLogo}
-                  alt="Space Logo"
-                  className="w-24 h-24 object-cover rounded-full mb-4 border-2 border-gray-300"
-                />
-              )
-            )}
-
-            {isEditing ? (
-              <input
-                type="text"
-                value={editedSpace.spaceName}
-                onChange={(e) => setEditedSpace({ ...editedSpace, spaceName: e.target.value })}
-                className="text-2xl font-bold text-center w-full border p-2 rounded bg-gray-100"
-              />
-            ) : (
-              <CardTitle className="text-2xl font-bold">{space.spaceName}</CardTitle>
-            )}
-
-            {isEditing ? (
-              <textarea
-                value={editedSpace.customMessage}
-                onChange={(e) => setEditedSpace({ ...editedSpace, customMessage: e.target.value })}
-                className="text-gray-600 text-center w-full border p-2 rounded bg-gray-100"
-              />
-            ) : (
-              <CardDescription className="text-gray-500">{space.customMessage}</CardDescription>
-            )}
-          </CardHeader>
-
-          <CardContent className="p-6">
-            <p className="text-gray-700 font-medium">Questions:</p>
-            <div className="text-gray-700">
-              {space?.Questions?.map((question: string, index: number) => (
-                <div key={index} className="mb-4 bg-gray-100 p-3 rounded-lg shadow-sm">
-                  <p className="text-gray-700 font-semibold">Question {index + 1}:</p>
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      value={editedSpace.Questions[index]}
-                      onChange={(e) => {
-                        const newQuestions = [...editedSpace.Questions];
-                        newQuestions[index] = e.target.value;
-                        setEditedSpace({ ...editedSpace, Questions: newQuestions });
-                      }}
-                      className="w-full border p-2 rounded bg-white"
-                    />
-                  ) : (
-                    <p className="text-gray-700">{question}</p>
-                  )}
                 </div>
               ))}
             </div>
-
-            <div className="mt-4">
-              <p className="text-gray-700 font-medium">Collect Star Rating:</p>
-              {isEditing ? (
-                <select
-                  value={editedSpace.CollectStarRating ? "Yes" : "No"}
-                  onChange={(e) => setEditedSpace({ ...editedSpace, CollectStarRating: e.target.value === "Yes" })}
-                  className="w-full border p-2 rounded bg-gray-100"
-                >
-                  <option value="Yes">Yes</option>
-                  <option value="No">No</option>
-                </select>
-              ) : (
-                <p className="text-gray-700">{space.CollectStarRating ? "Yes" : "No"}</p>
-              )}
-            </div>
-
-            <p className="text-sm text-gray-500 mt-2">Created on: {new Date(space.createdAt).toLocaleDateString()}</p>
-          </CardContent>
-
-          <CardFooter className="flex justify-end space-x-2">
-            <Button variant="outline" onClick={() => setIsEditing(!isEditing)}>
-              {isEditing ? 'Cancel' : 'Edit'}
-            </Button>
-            {isEditing && (
-              <Button onClick={handleSave}>
-                Save Changes
-              </Button>
-            )}
-          </CardFooter>
-        </Card>
-      )}
+            {/* Pagination Dots */}
+            <div className="swiper-pagination"></div>
+          </div>
+        )}
+      </div>
     </div>
+  </CardContent>
+  <CardFooter>
+    <Button onClick={handleCopyEmbed} className="flex items-center">
+      <Copy className="h-4 w-4 mr-2" />
+      {copied ? 'Copied!' : 'Copy Embed Code'}
+    </Button>
+  </CardFooter>
+</Card>
+)}
+
+    {/* Edit Tab */}
+    {activeTab === 'edit' && (
+      <Card className='h-full hover:shadow-md transition-shadow duration-200 rounded-lg shadow-lg bg-white/30 backdrop-blur-md border border-white/20'>
+        <CardHeader className="flex flex-col items-center text-center">
+          {isEditing ? (
+            <div className="mb-4 w-full ">
+              <label className="block text-gray-700 text-sm font-bold mb-2">Space Logo</label>
+              <input
+                type="file"
+                onChange={(e) => setEditedSpace({ ...editedSpace, spaceLogo: e.target.files?.[0] })}
+                className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer h-full hover:shadow-md transition-shadow duration-200 rounded-lg shadow-lg bg-white/30 backdrop-blur-md border border-white/20 p-2"
+              />
+            </div>
+          ) : (
+            space.spaceLogo && (
+              <img
+                src={space.spaceLogo}
+                alt="Space Logo"
+                className="w-24 h-24 object-cover rounded-full mb-4 border-2 border-gray-300"
+              />
+            )
+          )}
+
+          {isEditing ? (
+            <input
+              type="text"
+              value={editedSpace.spaceName}
+              onChange={(e) => setEditedSpace({ ...editedSpace, spaceName: e.target.value })}
+              className="text-2xl font-bold text-center w-full border p-2 rounded h-full hover:shadow-md transition-shadow duration-200 rounded-lg shadow-lg bg-white/30 backdrop-blur-md border border-white/20 "
+            />
+          ) : (
+            <CardTitle className="text-2xl font-bold  ">{space.spaceName}</CardTitle>
+          )}
+
+          {isEditing ? (
+            <textarea
+              value={editedSpace.customMessage}
+              onChange={(e) => setEditedSpace({ ...editedSpace, customMessage: e.target.value })}
+              className="text-gray-600 text-center w-full border p-2 rounded bg-none h-full hover:shadow-md transition-shadow duration-200 rounded-lg shadow-lg bg-white/30 backdrop-blur-md border border-white/20 "
+            />
+          ) : (
+            <CardDescription className="text-gray-500 ">{space.customMessage}</CardDescription>
+          )}
+        </CardHeader>
+
+        <CardContent className="p-6">
+          <p className="text-gray-700 font-medium">Questions:</p>
+          <div className="text-gray-700">
+            {space?.Questions?.map((question: string, index: number) => (
+              <div key={index} className="mb-4 h-full hover:shadow-md transition-shadow duration-200 rounded-lg shadow-lg bg-white/30 backdrop-blur-md border border-white/20 p-3 rounded-lg shadow-sm">
+                <p className="text-gray-700 font-semibold">Question {index + 1}:</p>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    value={editedSpace.Questions[index]}
+                    onChange={(e) => {
+                      const newQuestions = [...editedSpace.Questions];
+                      newQuestions[index] = e.target.value;
+                      setEditedSpace({ ...editedSpace, Questions: newQuestions });
+                    }}
+                    className="w-full p-2 border-none bg-none   "
+                  />
+                ) : (
+                  <p className="text-gray-700">{question}</p>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-4">
+            <p className="text-gray-700 font-medium ">Collect Star Rating:</p>
+            {isEditing ? (
+              <select
+                value={editedSpace.CollectStarRating ? "Yes" : "No"}
+                onChange={(e) => setEditedSpace({ ...editedSpace, CollectStarRating: e.target.value === "Yes" })}
+                className="w-full border p-2 rounded h-full hover:shadow-md transition-shadow duration-200 rounded-lg shadow-lg bg-white/30 backdrop-blur-md border border-white/20 "
+              >
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+            ) : (
+              <p className="text-gray-700">{space.CollectStarRating ? "Yes" : "No"}</p>
+            )}
+          </div>
+
+          <p className="text-sm text-gray-500 mt-2">Created on: {new Date(space.createdAt).toLocaleDateString()}</p>
+        </CardContent>
+
+        <CardFooter className="flex justify-end space-x-2">
+          <Button variant="outline" onClick={() => setIsEditing(!isEditing)}>
+            {isEditing ? 'Cancel' : 'Edit'}
+          </Button>
+          {isEditing && (
+            <Button onClick={handleSave}>
+              Save Changes
+            </Button>
+          )}
+        </CardFooter>
+      </Card>
+    )}
+  </div></div>
+    
   );
 };
 

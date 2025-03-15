@@ -53,7 +53,8 @@ const CreateSpacePage: React.FC = () => {
   };
 
   return (
-    <div className=" container mx-auto px-4 py-8">
+    <div className='min-h-screen relative bg-gradient-to-b from-[#8EC5FC] to-[#E0C3FC] bg-cover bg-center'>
+      <div className=" container mx-auto px-4 py-8">
       <button 
         onClick={() => navigate('/dashboard')}
         className="flex items-center text-gray-600 hover:text-gray-900 mb-6"
@@ -105,6 +106,7 @@ const CreateSpacePage: React.FC = () => {
               <div>
                 <TextArea
                   label="Custom Message"
+                  className='h-full hover:shadow-md transition-shadow duration-200 rounded-lg shadow-lg bg-white/30 backdrop-blur-md border border-white/20'
                   placeholder="Enter a custom message"
                   error={errors.customMessage?.message}
                   {...register('customMessage', { 
@@ -217,6 +219,7 @@ const CreateSpacePage: React.FC = () => {
           </CardFooter>
         </Card>
       </div>
+    </div>
     </div>
   );
 };

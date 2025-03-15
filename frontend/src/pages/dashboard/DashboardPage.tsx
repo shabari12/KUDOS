@@ -5,6 +5,7 @@ import Button from '../../components/ui/Button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../../components/ui/Card';
 import { UserDataContext } from '../../context/UserContext';
 import axios from 'axios';
+import Navbar from '../../components/layout/Navbar';
 
 const DashboardPage: React.FC = () => {
   const { user } = useContext(UserDataContext);
@@ -58,7 +59,9 @@ const DashboardPage: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className='min-h-screen relative bg-gradient-to-b from-[#8EC5FC] to-[#E0C3FC] bg-cover bg-center'>
+      <Navbar/>
+       <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Welcome, {user?.username}</h1>
@@ -74,7 +77,7 @@ const DashboardPage: React.FC = () => {
       </div>
 
       {spaces.length === 0 ? (
-        <Card className="bg-gray-50 border-dashed">
+        <Card className="bg-gray-50 border-dashed rounded-lg shadow-lg bg-white/30 backdrop-blur-md border border-white/20 ">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <div className="rounded-full bg-blue-100 p-3 mb-4">
               <Plus className="h-6 w-6 text-blue-600" />
@@ -92,7 +95,7 @@ const DashboardPage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {spaces.map((space) => (
             <Link key={space._id} to={`/dashboard/space/${space._id}`}>
-              <Card className="h-full hover:shadow-md transition-shadow duration-200">
+              <Card className="h-full hover:shadow-md transition-shadow duration-200 rounded-lg shadow-lg bg-white/30 backdrop-blur-md border border-white/20">
               <CardHeader>
   <div className="flex justify-between items-start">
     <div className="flex items-center">
@@ -133,6 +136,8 @@ const DashboardPage: React.FC = () => {
         </div>
       )}
     </div>
+    </div>
+   
   );
 };
 
