@@ -27,7 +27,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className="flex flex-col min-h-screen">
-      
+    
       <main className="flex-grow">{children}</main>
       <Footer />
     </div>
@@ -38,7 +38,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 const AuthLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+      
       <main className="flex-grow">{children}</main>
     </div>
   );

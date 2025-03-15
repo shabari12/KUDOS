@@ -2,12 +2,12 @@ import React, { useContext, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { MessageSquare } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../../components/ui/Card';
+import { Card, CardContent, CardFooter } from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
-
 import axios from 'axios';
 import { UserDataContext } from '../../context/UserContext';
+import Navbar from '../../components/layout/Navbar';
 
 interface SignupFormData {
   name: string;
@@ -25,7 +25,7 @@ const SignupPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [userPassword, setUserPassword] = useState('');
-  const { user, setUser } = useContext(UserDataContext);
+  const { setUser } = useContext(UserDataContext);
 
   const onSubmit = async (data: SignupFormData) => {
     try {
@@ -69,24 +69,25 @@ const SignupPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+    <div className="min-h-screen relative bg-gradient-to-b from-[#8EC5FC] to-[#E0C3FC] bg-cover bg-center">
+      <Navbar />
+      <div className="sm:mx-auto sm:w-full sm:max-w-md p-10">
         <div className="flex justify-center">
-          <MessageSquare className="h-12 w-12 text-blue-600" />
+          <MessageSquare className="h-12 w-12 text-black" />
         </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Create your account
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
           Already have an account?{' '}
-          <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
+          <Link to="/login" className="font-medium text-black hover:text-blue-500">
             Log in
           </Link>
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <Card>
+        <Card className="h-full hover:shadow-md transition-shadow duration-200 rounded-lg shadow-lg bg-white/30 backdrop-blur-md border border-white/20 shadow-lg rounded-xl w-full max-w-md">
           <CardContent className="pt-6">
             {!showOtpInput ? (
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
