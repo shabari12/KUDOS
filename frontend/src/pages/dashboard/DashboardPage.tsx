@@ -59,13 +59,13 @@ const DashboardPage: React.FC = () => {
   };
 
   return (
-    <div className='min-h-screen relative bg-gradient-to-b from-[#8EC5FC] to-[#E0C3FC] bg-cover bg-center'>
+    <div className="min-h-screen relative  bg-cover bg-center" style={{ backgroundColor: '#2b4162', backgroundImage: 'linear-gradient(315deg, #2b4162 0%, #12100e 74%)' }}>
       <Navbar/>
        <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Welcome, {user?.username}</h1>
-          <p className="text-gray-600 mt-1">Manage your testimonial spaces</p>
+          <h1 className="text-2xl font-bold text-white">Welcome, {user?.username}</h1>
+          <p className="text-white mt-1">Manage your testimonial spaces</p>
         </div>
         <div className="mt-4 md:mt-0">
           <Link to="/dashboard/create-space">
@@ -82,8 +82,8 @@ const DashboardPage: React.FC = () => {
             <div className="rounded-full bg-blue-100 p-3 mb-4">
               <Plus className="h-6 w-6 text-blue-600" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No spaces yet</h3>
-            <p className="text-gray-600 text-center max-w-md mb-6">
+            <h3 className="text-lg font-medium text-white mb-2">No spaces yet</h3>
+            <p className="text-white text-center max-w-md mb-6">
               Create your first testimonial space to start collecting feedback from your customers.
             </p>
             <Link to="/dashboard/create-space">
@@ -106,17 +106,17 @@ const DashboardPage: React.FC = () => {
           className="w-10 h-10 rounded-full mr-3 object-cover"
         />
       )}
-      <CardTitle className="text-xl">{space.spaceName}</CardTitle>
+      <CardTitle className="text-xl text-white">{space.spaceName}</CardTitle>
     </div>
     <button onClick={(e) => handleDeleteSpace(space._id, e)} className="text-gray-400 hover:text-red-500 transition-colors">
       <Trash2 className="h-5 w-5" />
     </button>
   </div>
-  <CardDescription>{space.customMessage}</CardDescription>
+  <CardDescription className="text-white">{space.customMessage}</CardDescription>
 </CardHeader>
 
                 <CardContent>
-                  <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                  <div className="flex items-center justify-between text-sm text-white mb-4">
                     <span>Created: {formatDate(space.createdAt)}</span>
                     <span>{space.Questions?.length || 0} questions</span>
                   </div>

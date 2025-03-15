@@ -143,16 +143,16 @@ const SpaceDetailPage: React.FC = () => {
   if (!space) {
     return (
       <div className="container mx-auto px-4 py-8 text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Loading...</h2>
+        <h2 className="text-2xl font-bold text-white mb-4">Loading...</h2>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen relative bg-gradient-to-b from-[#8EC5FC] to-[#E0C3FC] bg-cover bg-center"><div className="container mx-auto px-4 py-8 ">
+    <div className="min-h-screen relative  bg-cover bg-center" style={{ backgroundColor: '#2b4162', backgroundImage: 'linear-gradient(315deg, #2b4162 0%, #12100e 74%)' }}><div className="container mx-auto px-4 py-8 ">
     <button
       onClick={() => navigate('/dashboard')}
-      className="flex items-center text-gray-600 hover:text-gray-900 mb-6"
+      className="flex items-center text-white hover:text-gray-900 mb-6"
     >
       <ArrowLeft className="h-4 w-4 mr-2" />
       Back to Dashboard
@@ -160,8 +160,8 @@ const SpaceDetailPage: React.FC = () => {
 
     <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">{space.spaceName}</h1>
-        <p className="text-gray-600 mt-1">{space.customMessage}</p>
+        <h1 className="text-2xl font-bold text-white">{space.spaceName}</h1>
+        <p className="text-white mt-1">{space.customMessage}</p>
       </div>
       <div className="mt-4 md:mt-0 flex space-x-3">
         <Button variant="outline" className="flex items-center" onClick={handleCopyLink}>
@@ -185,7 +185,7 @@ const SpaceDetailPage: React.FC = () => {
               className={`py-4 px-1 border-b-2 font-medium text-sm ${
                 activeTab === tab
                   ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  : 'border-transparent text-white hover:text-gray-700 hover:border-gray-300'
               }`}
               onClick={() => setActiveTab(tab as 'testimonials' | 'embed' | 'edit')}
             >
@@ -200,11 +200,11 @@ const SpaceDetailPage: React.FC = () => {
     {activeTab === 'testimonials' && (
       <Card className=''>
         <CardHeader>
-          <CardTitle>Testimonials</CardTitle>
+          <CardTitle className='text-white'>Testimonials</CardTitle>
         </CardHeader>
         <CardContent>
           {space?.testimonials?.length === 0 ? (
-            <p className="text-gray-500 italic">No testimonials yet.</p>
+            <p className="text-white italic">No testimonials yet.</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {space?.testimonials?.map((testimonial: any) => (
@@ -220,7 +220,7 @@ const SpaceDetailPage: React.FC = () => {
                     )}
                     <div>
                       <p className="text-lg font-semibold text-gray-900">{testimonial.name}</p>
-                      <p className="text-sm text-gray-500">{testimonial.email}</p>
+                      <p className="text-sm text-white">{testimonial.email}</p>
                     </div>
                   </div>
 
@@ -231,7 +231,7 @@ const SpaceDetailPage: React.FC = () => {
                         <Star
                           key={index}
                           className={`h-5 w-5 ${
-                            index < testimonial.rating ? 'text-yellow-400' : 'text-gray-300'
+                            index < testimonial.rating ? 'text-yellow-400' : 'text-white'
                           }`}
                           fill={index < testimonial.rating ? 'currentColor' : 'none'}
                         />
@@ -240,10 +240,10 @@ const SpaceDetailPage: React.FC = () => {
                   )}
 
                   {/* Feedback */}
-                  <p className="mt-4 text-gray-700 italic">"{testimonial.feedback}"</p>
+                  <p className="mt-4 text-white italic">"{testimonial.feedback}"</p>
 
                   {/* Submitted Time */}
-                  <p className="mt-4 text-sm text-gray-500">
+                  <p className="mt-4 text-sm text-white">
                     Submitted on: {new Date(testimonial.createdAt).toLocaleString()}
                   </p>
                 </div>
@@ -287,10 +287,10 @@ const SpaceDetailPage: React.FC = () => {
 
     {/* Preview Section */}
     <div className="mt-6">
-      <h3 className="text-lg font-semibold mb-4">Preview</h3>
+      <h3 className="text-lg font-semibold mb-4 text-white">Preview</h3>
       <div className="p-6 bg-gray-100 rounded-lg">
         {space.testimonials.length === 0 ? (
-          <p className="text-gray-500 italic">No testimonials to display.</p>
+          <p className="text-black italic">No testimonials to display.</p>
         ) : (
           <div className="testimonial-carousel swiper-container overflow-hidden">
             <div className="swiper-wrapper">
@@ -308,7 +308,7 @@ const SpaceDetailPage: React.FC = () => {
                       )}
                       <div>
                         <p className="text-lg font-semibold text-gray-900">{testimonial.name}</p>
-                        <p className="text-sm text-gray-500">{testimonial.email}</p>
+                        <p className="text-sm text-white">{testimonial.email}</p>
                       </div>
                     </div>
 
@@ -319,7 +319,7 @@ const SpaceDetailPage: React.FC = () => {
                           <Star
                             key={index}
                             className={`h-5 w-5 ${
-                              index < testimonial.rating ? 'text-yellow-400' : 'text-gray-300'
+                              index < testimonial.rating ? 'text-yellow-400' : 'text-white'
                             }`}
                             fill={index < testimonial.rating ? 'currentColor' : 'none'}
                           />
@@ -328,10 +328,10 @@ const SpaceDetailPage: React.FC = () => {
                     )}
 
                     {/* Feedback */}
-                    <p className="mt-4 text-gray-700 italic">"{testimonial.feedback}"</p>
+                    <p className="mt-4 text-white italic">"{testimonial.feedback}"</p>
 
                     {/* Submitted Time */}
-                    <p className="mt-4 text-sm text-gray-500">
+                    <p className="mt-4 text-sm text-white">
                       Submitted on: {new Date(testimonial.createdAt).toLocaleString()}
                     </p>
                   </div>
@@ -356,104 +356,104 @@ const SpaceDetailPage: React.FC = () => {
 
     {/* Edit Tab */}
     {activeTab === 'edit' && (
-      <Card className='h-full hover:shadow-md transition-shadow duration-200 rounded-lg shadow-lg bg-white/30 backdrop-blur-md border border-white/20'>
-        <CardHeader className="flex flex-col items-center text-center">
-          {isEditing ? (
-            <div className="mb-4 w-full ">
-              <label className="block text-gray-700 text-sm font-bold mb-2">Space Logo</label>
-              <input
-                type="file"
-                onChange={(e) => setEditedSpace({ ...editedSpace, spaceLogo: e.target.files?.[0] })}
-                className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer h-full hover:shadow-md transition-shadow duration-200 rounded-lg shadow-lg bg-white/30 backdrop-blur-md border border-white/20 p-2"
-              />
-            </div>
-          ) : (
-            space.spaceLogo && (
-              <img
-                src={space.spaceLogo}
-                alt="Space Logo"
-                className="w-24 h-24 object-cover rounded-full mb-4 border-2 border-gray-300"
-              />
-            )
-          )}
+  <Card className='h-full hover:shadow-md transition-shadow duration-200 rounded-lg shadow-lg bg-white/30 backdrop-blur-md border border-white/20'>
+    <CardHeader className="flex flex-col items-center text-center">
+      {isEditing ? (
+        <div className="mb-4 w-full">
+          <label className="block text-black text-sm font-bold mb-2">Space Logo</label>
+          <input
+            type="file"
+            onChange={(e) => setEditedSpace({ ...editedSpace, spaceLogo: e.target.files?.[0] })}
+            className="block w-full text-sm text-black border border-gray-300 rounded-lg cursor-pointer p-2"
+          />
+        </div>
+      ) : (
+        space.spaceLogo && (
+          <img
+            src={space.spaceLogo}
+            alt="Space Logo"
+            className="w-24 h-24 object-cover rounded-full mb-4 border-2 border-gray-300"
+          />
+        )
+      )}
 
-          {isEditing ? (
-            <input
-              type="text"
-              value={editedSpace.spaceName}
-              onChange={(e) => setEditedSpace({ ...editedSpace, spaceName: e.target.value })}
-              className="text-2xl font-bold text-center w-full border p-2 rounded h-full hover:shadow-md transition-shadow duration-200 rounded-lg shadow-lg bg-white/30 backdrop-blur-md border border-white/20 "
-            />
-          ) : (
-            <CardTitle className="text-2xl font-bold  ">{space.spaceName}</CardTitle>
-          )}
+      {isEditing ? (
+        <input
+          type="text"
+          value={editedSpace.spaceName}
+          onChange={(e) => setEditedSpace({ ...editedSpace, spaceName: e.target.value })}
+          className="text-2xl font-bold text-center w-full border p-2 rounded text-black bg-transparent"
+        />
+      ) : (
+        <CardTitle className="text-2xl font-bold">{space.spaceName}</CardTitle>
+      )}
 
-          {isEditing ? (
-            <textarea
-              value={editedSpace.customMessage}
-              onChange={(e) => setEditedSpace({ ...editedSpace, customMessage: e.target.value })}
-              className="text-gray-600 text-center w-full border p-2 rounded bg-none h-full hover:shadow-md transition-shadow duration-200 rounded-lg shadow-lg bg-white/30 backdrop-blur-md border border-white/20 "
-            />
-          ) : (
-            <CardDescription className="text-gray-500 ">{space.customMessage}</CardDescription>
-          )}
-        </CardHeader>
+      {isEditing ? (
+        <textarea
+          value={editedSpace.customMessage}
+          onChange={(e) => setEditedSpace({ ...editedSpace, customMessage: e.target.value })}
+          className="text-black text-center w-full border p-2 rounded bg-transparent"
+        />
+      ) : (
+        <CardDescription className="text-white">{space.customMessage}</CardDescription>
+      )}
+    </CardHeader>
 
-        <CardContent className="p-6">
-          <p className="text-gray-700 font-medium">Questions:</p>
-          <div className="text-gray-700">
-            {space?.Questions?.map((question: string, index: number) => (
-              <div key={index} className="mb-4 h-full hover:shadow-md transition-shadow duration-200 rounded-lg shadow-lg bg-white/30 backdrop-blur-md border border-white/20 p-3 rounded-lg shadow-sm">
-                <p className="text-gray-700 font-semibold">Question {index + 1}:</p>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={editedSpace.Questions[index]}
-                    onChange={(e) => {
-                      const newQuestions = [...editedSpace.Questions];
-                      newQuestions[index] = e.target.value;
-                      setEditedSpace({ ...editedSpace, Questions: newQuestions });
-                    }}
-                    className="w-full p-2 border-none bg-none   "
-                  />
-                ) : (
-                  <p className="text-gray-700">{question}</p>
-                )}
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-4">
-            <p className="text-gray-700 font-medium ">Collect Star Rating:</p>
+    <CardContent className="p-6">
+      <p className="text-black font-medium">Questions:</p>
+      <div className="text-black">
+        {space?.Questions?.map((question: string, index: number) => (
+          <div key={index} className="mb-4 h-full hover:shadow-md transition-shadow duration-200 rounded-lg shadow-lg bg-white/30 backdrop-blur-md border border-white/20 p-3 rounded-lg shadow-sm">
+            <p className="text-black font-semibold">Question {index + 1}:</p>
             {isEditing ? (
-              <select
-                value={editedSpace.CollectStarRating ? "Yes" : "No"}
-                onChange={(e) => setEditedSpace({ ...editedSpace, CollectStarRating: e.target.value === "Yes" })}
-                className="w-full border p-2 rounded h-full hover:shadow-md transition-shadow duration-200 rounded-lg shadow-lg bg-white/30 backdrop-blur-md border border-white/20 "
-              >
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-              </select>
+              <input
+                type="text"
+                value={editedSpace.Questions[index]}
+                onChange={(e) => {
+                  const newQuestions = [...editedSpace.Questions];
+                  newQuestions[index] = e.target.value;
+                  setEditedSpace({ ...editedSpace, Questions: newQuestions });
+                }}
+                className="w-full p-2 border-none text-black bg-transparent"
+              />
             ) : (
-              <p className="text-gray-700">{space.CollectStarRating ? "Yes" : "No"}</p>
+              <p className="text-black">{question}</p>
             )}
           </div>
+        ))}
+      </div>
 
-          <p className="text-sm text-gray-500 mt-2">Created on: {new Date(space.createdAt).toLocaleDateString()}</p>
-        </CardContent>
+      <div className="mt-4">
+        <p className="text-black font-medium">Collect Star Rating:</p>
+        {isEditing ? (
+          <select
+            value={editedSpace.CollectStarRating ? "Yes" : "No"}
+            onChange={(e) => setEditedSpace({ ...editedSpace, CollectStarRating: e.target.value === "Yes" })}
+            className="w-full border p-2 rounded text-black bg-transparent"
+          >
+            <option value="Yes" className='text-black'>Yes</option>
+            <option value="No" className='text-black'>No</option>
+          </select>
+        ) : (
+          <p className='text-white'>{space.CollectStarRating ? "Yes" : "No"}</p>
+        )}
+      </div>
 
-        <CardFooter className="flex justify-end space-x-2">
-          <Button variant="outline" onClick={() => setIsEditing(!isEditing)}>
-            {isEditing ? 'Cancel' : 'Edit'}
-          </Button>
-          {isEditing && (
-            <Button onClick={handleSave}>
-              Save Changes
-            </Button>
-          )}
-        </CardFooter>
-      </Card>
-    )}
+      <p className="text-sm text-white mt-2">Created on: {new Date(space.createdAt).toLocaleDateString()}</p>
+    </CardContent>
+
+    <CardFooter className="flex justify-end space-x-2">
+      <Button variant="outline" onClick={() => setIsEditing(!isEditing)}>
+        {isEditing ? 'Cancel' : 'Edit'}
+      </Button>
+      {isEditing && (
+        <Button onClick={handleSave}>
+          Save Changes
+        </Button>
+      )}
+    </CardFooter>
+  </Card>
+)}
   </div></div>
     
   );

@@ -14,11 +14,11 @@ const fadeIn = {
 
 const LandingPage: React.FC = () => {
   return (
-    <div className="min-h-screen relative bg-gradient-to-b from-[#8EC5FC] to-[#E0C3FC] bg-cover bg-center">
+    <div className="min-h-screen relative  bg-cover bg-center" style={{ backgroundColor: '#2b4162', backgroundImage: 'linear-gradient(315deg, #2b4162 0%, #12100e 74%)' }}>
       <Navbar />
       <div className="flex flex-col min-h-screen items-center justify-center">
         {/* Hero Section */}
-        <section className="text-black">
+        <section className="text-white">
           <motion.div
             className="container mx-auto py-16 md:py-24 lg:py-32 pt-32"
             initial="hidden"
@@ -27,10 +27,10 @@ const LandingPage: React.FC = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
               <div>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-black">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-white">
                   Collect and showcase testimonials with ease
                 </h1>
-                <div className="mt-6 text-lg md:text-xl text-black">
+                <div className="mt-6 text-lg md:text-xl text-white">
                   <Typewriter
                     onInit={(typewriter) => {
                       typewriter
@@ -44,7 +44,7 @@ const LandingPage: React.FC = () => {
                 </div>
                 <div className="mt-8 flex flex-col sm:flex-row gap-4">
                   <Link to="/signup">
-                    <Button size="lg" className="w-full sm:w-auto">
+                    <Button size="lg" className="w-full sm:w-auto bg-white text-black">
                       Get Started Free
                     </Button>
                   </Link>
@@ -81,10 +81,10 @@ const LandingPage: React.FC = () => {
               viewport={{ once: true }}
               variants={fadeIn}
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+              <h2 className="text-3xl md:text-4xl font-bold text-white">
                 Everything you need to collect and showcase testimonials
               </h2>
-              <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
+              <p className="mt-4 text-xl text-white max-w-3xl mx-auto">
                 Our platform makes it easy to gather authentic feedback and
                 display it beautifully.
               </p>
@@ -142,16 +142,16 @@ const LandingPage: React.FC = () => {
             viewport={{ once: true }}
             variants={fadeIn}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+            <h2 className="text-3xl md:text-4xl font-bold text-white">
               Ready to start collecting testimonials?
             </h2>
-            <p className="mt-4 text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="mt-4 text-xl text-white max-w-2xl mx-auto">
               Join thousands of businesses that use TestiCollect to build trust
               and increase conversions.
             </p>
             <div className="mt-8">
               <Link to="/signup">
-                <Button size="lg" className="px-8 bg-[#E0C3FC] text-black">
+                <Button size="lg" className="px-8 bg-white text-black">
                   Get Started Free <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>

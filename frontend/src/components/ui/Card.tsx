@@ -1,5 +1,6 @@
 import React from 'react';
 import { cn } from '../../lib/utils';
+import { text } from 'express';
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
@@ -26,7 +27,7 @@ const CardHeader = ({
 }: React.HTMLAttributes<HTMLDivElement>) => {
   return (
     <div
-      className={cn("flex flex-col space-y-1.5 p-6", className)}
+      className={cn("flex flex-col space-y-1.5 p-6 text-white", className)}
       {...props}
     >
       {children}
@@ -41,7 +42,7 @@ const CardTitle = ({
 }: React.HTMLAttributes<HTMLHeadingElement>) => {
   return (
     <h3
-      className={cn("text-xl font-semibold leading-none tracking-tight", className)}
+      className={cn("text-xl font-semibold leading-none tracking-tight text-white", className)}
       {...props}
     >
       {children}
@@ -56,7 +57,7 @@ const CardDescription = ({
 }: React.HTMLAttributes<HTMLParagraphElement>) => {
   return (
     <p
-      className={cn("text-sm text-gray-500", className)}
+      className={cn("text-sm text-white", className)}
       {...props}
     >
       {children}
@@ -70,7 +71,7 @@ const CardContent = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => {
   return (
-    <div className={cn("p-6 pt-0", className)} {...props}>
+    <div className={cn("p-6 pt-0" , className)} {...props}>
       {children}
     </div>
   );

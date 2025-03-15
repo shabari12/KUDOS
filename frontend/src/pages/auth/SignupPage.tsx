@@ -69,18 +69,18 @@ const SignupPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen relative bg-gradient-to-b from-[#8EC5FC] to-[#E0C3FC] bg-cover bg-center">
-      <Navbar />
+    <div className="min-h-screen relative  bg-cover bg-center" style={{ backgroundColor: '#2b4162', backgroundImage: 'linear-gradient(315deg, #2b4162 0%, #12100e 74%)' }}>
+    <Navbar/>
       <div className="sm:mx-auto sm:w-full sm:max-w-md p-10">
         <div className="flex justify-center">
-          <MessageSquare className="h-12 w-12 text-black" />
+          <MessageSquare className="h-12 w-12 text-white" />
         </div>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
           Create your account
         </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
+        <p className="mt-2 text-center text-sm text-white">
           Already have an account?{' '}
-          <Link to="/login" className="font-medium text-black hover:text-blue-500">
+          <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
             Log in
           </Link>
         </p>
@@ -195,7 +195,7 @@ const SignupPage: React.FC = () => {
             )}
           </CardContent>
           <CardFooter className="flex justify-center border-t border-gray-200 p-6">
-            <p className="text-xs text-gray-500 text-center">
+            <p className="text-xs text-white text-center">
               By signing up, you agree to our{' '}
               <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
                 Terms of Service

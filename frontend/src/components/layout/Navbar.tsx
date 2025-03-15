@@ -14,8 +14,8 @@ const Navbar: React.FC = () => {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
-              <MessageSquare className="h-8 w-8 text-black" />
-              <span className="ml-2 text-xl font-bold text-black">Kudos</span>
+              <MessageSquare className="h-8 w-8 text-white" />
+              <span className="ml-2 text-xl font-bold text-white">Kudos</span>
             </Link>
           </div>
 
@@ -24,21 +24,21 @@ const Navbar: React.FC = () => {
             {!isAuthenticated ? (
               <>
                 <Link to="/login">
-                  <Button variant="ghost">Log in</Button>
+                  <Button variant="ghost" className="text-white hover:text-black  hover:bg-white">Log in</Button>
                 </Link>
                 <Link to="/signup">
-                  <Button>Sign up</Button>
+                  <Button className="text-white">Sign up</Button>
                 </Link>
               </>
             ) : (
               <>
                 <Link to="/dashboard">
-                  <Button variant="ghost">Dashboard</Button>
+                  <Button variant="ghost" className="text-white">Dashboard</Button>
                 </Link>
                 <Link to="/">
                   <Button onClick={(e)=>{
                     localStorage.removeItem('token')
-                  }} variant="outline">Log out</Button>
+                  }} variant="outline" className="text-white">Log out</Button>
                 </Link>
               </>
             )}
@@ -48,7 +48,7 @@ const Navbar: React.FC = () => {
           <div className="md:hidden">
             <button
               type="button"
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+              className="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               <span className="sr-only">Open main menu</span>
@@ -70,14 +70,14 @@ const Navbar: React.FC = () => {
               <>
                 <Link
                   to="/login"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-900 hover:bg-gray-50"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Log in
                 </Link>
                 <Link
                   to="/signup"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-900 hover:bg-gray-50"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Sign up
@@ -87,14 +87,14 @@ const Navbar: React.FC = () => {
               <>
                 <Link
                   to="/dashboard"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-900 hover:bg-gray-50"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Dashboard
                 </Link>
                 <Link
                   to="/"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-900 hover:bg-gray-50"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Log out
