@@ -293,7 +293,7 @@ const SpaceDetailPage: React.FC = () => {
           <p className="text-black italic">No testimonials to display.</p>
         ) : (
           <div className="testimonial-carousel swiper-container overflow-hidden">
-            <div className="swiper-wrapper">
+            <div className="swiper-wrapper text-black ">
               {space.testimonials.map((testimonial: any) => (
                 <div key={testimonial._id} className="swiper-slide">
                   <div className="p-6 bg-white rounded-lg shadow-sm border border-gray-100">
@@ -307,7 +307,7 @@ const SpaceDetailPage: React.FC = () => {
                         />
                       )}
                       <div>
-                        <p className="text-lg font-semibold text-gray-900">{testimonial.name}</p>
+                        <p className="text-lg font-semibold text-black ">{testimonial.name}</p>
                         <p className="text-sm text-white">{testimonial.email}</p>
                       </div>
                     </div>
@@ -328,10 +328,10 @@ const SpaceDetailPage: React.FC = () => {
                     )}
 
                     {/* Feedback */}
-                    <p className="mt-4 text-white italic">"{testimonial.feedback}"</p>
+                    <p className="mt-4 text-black  italic">"{testimonial.feedback}"</p>
 
                     {/* Submitted Time */}
-                    <p className="mt-4 text-sm text-white">
+                    <p className="mt-4 text-sm text-black ">
                       Submitted on: {new Date(testimonial.createdAt).toLocaleString()}
                     </p>
                   </div>
