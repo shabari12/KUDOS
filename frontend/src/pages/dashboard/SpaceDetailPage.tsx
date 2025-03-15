@@ -94,7 +94,7 @@ const SpaceDetailPage: React.FC = () => {
       <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
   
       <!-- Testimonial Widget Script -->
-      <script src="${window.location.origin}/testimonial-widget.js" data-space-id="${id}"></script>
+      <script src="https://kudos-webapp.vercel.app/testimonial-widget.js" data-space-id="${id}"></script>
     `;
   
     navigator.clipboard.writeText(embedCode);
