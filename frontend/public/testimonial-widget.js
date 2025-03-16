@@ -111,7 +111,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   console.log("Space ID:", spaceId);
 
-  const baseUrl = import.meta.env.VITE_BASE_URL || "http://localhost:4000";
+  const baseUrl =
+    "https://kudos-webapp.onrender.com/feedback/get-feedback" ||
+    "http://localhost:4000";
 
   try {
     const response = await fetch(`${baseUrl}/feedback/get-feedback`, {
