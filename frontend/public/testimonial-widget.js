@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   console.log("Space ID:", spaceId);
 
   const baseUrl =
-    "https://kudos-webapp.onrender.com" ||
+    "https://kudos-backend.vercel.app" ||
     "http://localhost:4000";
 
   try {
