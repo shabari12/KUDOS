@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   console.log("Space ID:", spaceId);
 
   const baseUrl =
-    "https://kudos-webapp.onrender.com/feedback/get-feedback" ||
+    "https://kudos-webapp.onrender.com" ||
     "http://localhost:4000";
 
   try {
