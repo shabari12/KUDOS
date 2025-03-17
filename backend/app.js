@@ -13,6 +13,7 @@ const corsOptions = {
     "https://kudos-nine-mauve.vercel.app",
     "https://kudos-backend.vercel.app",
     "https://localhost:4000",
+    "http://127.0.0.1:5500",
   ], // Your frontend domain
   credentials: true, // Allow cookies if needed
 };
