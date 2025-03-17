@@ -70,11 +70,11 @@ const Footer: React.FC = () => {
           <div className="flex space-x-6 md:order-2">
             <a href="https://github.com/shabari12" className="text-white">
               <span className="sr-only">Twitter</span>
-            <Twitter className="h-5 w-5"  />
+            <Github className="h-5 w-5"  />
             </a>
             <a href="https://x.com/home?lang=en" className="text-white">
               <span className="sr-only">GitHub</span>
-              <Github className="h-5 w-5" />
+              <Twitter className="h-5 w-5" />
             </a>
           </div>
           <p className="mt-8 text-base text-white md:mt-0 md:order-1">
