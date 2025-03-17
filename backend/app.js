@@ -9,14 +9,7 @@ const userRoutes = require("./routes/userRoutes");
 const spaceRoutes = require("./routes/spaceRoutes");
 const feedbackRoutes = require("./routes/feedbackRoutes");
 const corsOptions = {
-  origin: [
-    "https://kudos-nine-mauve.vercel.app",
-    "https://kudos-backend.vercel.app",
-    "https://localhost:4000",
-    "http://127.0.0.1:5500",
-    "https://kudos1.vercel.app",
-    "https://kudos-vignesh.vercel.app",
-  ], // Your frontend domain
+  origin: true, // Your frontend domain
   credentials: true, // Allow cookies if needed
 };
 
