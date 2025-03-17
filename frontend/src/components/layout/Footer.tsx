@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
           <div className="md:col-span-1">
             <Link to="/" className="flex items-center">
               <MessageSquare className="h-6 w-6 text-white" />
-              <span className="ml-2 text-lg font-bold text-white">TestiCollect</span>
+              <span className="ml-2 text-lg font-bold text-white">Kudos</span>
             </Link>
             <p className="mt-2 text-sm text-white">
               Collect and showcase testimonials with ease.
@@ -78,7 +78,7 @@ const Footer: React.FC = () => {
             </a>
           </div>
           <p className="mt-8 text-base text-white md:mt-0 md:order-1">
-            &copy; {new Date().getFullYear()} TestiCollect. All rights reserved.
+            &copy; {new Date().getFullYear()} Kudos. All rights reserved.
           </p>
         </div>
       </div>
