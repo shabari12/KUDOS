@@ -14,6 +14,8 @@ const corsOptions = {
     "https://kudos-backend.vercel.app",
     "https://localhost:4000",
     "http://127.0.0.1:5500",
+    "https://kudos1.vercel.app",
+    "https://kudos-vignesh.vercel.app",
   ], // Your frontend domain
   credentials: true, // Allow cookies if needed
 };
