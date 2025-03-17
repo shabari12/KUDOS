@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   console.log("Space ID:", spaceId);
 
-  const baseUrl = "https://kudos-webapp.onrender.com";
+  const baseUrl = "https://kudos-backend.vercel.app";
 
   try {
     const response = await fetch(`${baseUrl}/feedback/get-feedback`, {

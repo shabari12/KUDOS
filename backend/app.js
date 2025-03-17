@@ -9,7 +9,11 @@ const userRoutes = require("./routes/userRoutes");
 const spaceRoutes = require("./routes/spaceRoutes");
 const feedbackRoutes = require("./routes/feedbackRoutes");
 const corsOptions = {
-  origin: "https://kudos-nine-mauve.vercel.app", // Your frontend domain
+  origin: [
+    "https://kudos-nine-mauve.vercel.app",
+    "https://kudos-backend.vercel.app",
+    "https://localhost:4000",
+  ], // Your frontend domain
   credentials: true, // Allow cookies if needed
 };
 
