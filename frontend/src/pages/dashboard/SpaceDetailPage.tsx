@@ -6,6 +6,7 @@ import Button from '../../components/ui/Button';
 import axios from 'axios';
 import Swiper from 'swiper';
 import 'swiper/swiper-bundle.css';
+import { CodeBlock } from '../../components/ui/code-block';
 
 const SpaceDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -265,7 +266,7 @@ const SpaceDetailPage: React.FC = () => {
   </CardHeader>
   <CardContent>
     {/* Embed Code Section */}
-    <div className="bg-gray-50 p-4 rounded-md font-mono text-sm overflow-x-auto mb-6">
+    {/* <div className="bg-gray-50 p-4 rounded-md font-mono text-sm overflow-x-auto mb-6">
       <code>{`
         <!-- Swiper CSS -->
         <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
@@ -283,8 +284,28 @@ const SpaceDetailPage: React.FC = () => {
         <!-- Testimonial Widget Script -->
         <script src="${window.location.origin}/testimonial-widget.js" data-space-id="${id}"></script>
       `}</code>
+    </div> */}
+<CodeBlock
+  language="html"
+  filename="index.html"
+  code={`
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+    <!-- Testimonial Widget Container -->
+    <div class="testimonial-carousel swiper-container overflow-hidden">
+      <div class="swiper-wrapper"></div>
+      <!-- Pagination Dots -->
+      <div class="swiper-pagination"></div>
     </div>
 
+    <!-- Swiper JS -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+    <!-- Testimonial Widget Script -->
+    <script src="${window.location.origin}/testimonial-widget.js" data-space-id="${id}"></script>
+  `}
+/>
     {/* Preview Section */}
     <div className="mt-6">
       <h3 className="text-lg font-semibold mb-4 text-white">Preview</h3>
